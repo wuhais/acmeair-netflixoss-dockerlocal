@@ -22,6 +22,10 @@ RUN cd /opt/tomcat/webapps &&\
   jar xf app.war &&\
   rm app.war
 
+RUN rm /opt/tomcat/webapps/ROOT/WEB-INF/lib/eureka-client-1.1.134.jar
+# https://github.com/Netflix/eureka/pull/140
+ADD eureka-client-1.1.135-SNAPSHOT.jar /opt/tomcat/webapps/ROOT/WEB-INF/lib/eureka-client-1.1.135-SNAPSHOT.jar
+
 ADD ACMEAIR_AUTH_SERVICE-docker.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/ACMEAIR_AUTH_SERVICE-docker.properties
 ADD config.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/config.properties
 

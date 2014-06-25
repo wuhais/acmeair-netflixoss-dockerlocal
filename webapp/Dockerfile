@@ -22,6 +22,12 @@ RUN cd /opt/tomcat/webapps &&\
   jar xf app.war &&\
   rm app.war
 
+RUN rm /opt/tomcat/webapps/ROOT/WEB-INF/lib/eureka-client-1.1.134.jar /opt/tomcat/webapps/ROOT/WEB-INF/lib/ribbon-eureka-0.3.12.jar
+# https://github.com/Netflix/eureka/pull/140
+ADD eureka-client-1.1.135-SNAPSHOT.jar /opt/tomcat/webapps/ROOT/WEB-INF/lib/eureka-client-1.1.135-SNAPSHOT.jar
+# https://github.com/Netflix/ribbon/pull/102
+ADD ribbon-eureka-0.3.13.jar /opt/tomcat/webapps/ROOT/WEB-INF/lib/ribbon-eureka-0.3.13.jar
+
 ADD ACMEAIR_WEBAPP-docker.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/ACMEAIR_WEBAPP-docker.properties
 ADD config.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/config.properties
 
@@ -29,4 +35,3 @@ ENV CATALINA_OPTS -Xmx48m
 ENV SERVICE_NAME webapp
 
 CMD ["/usr/bin/supervisord", "-n"]
-
