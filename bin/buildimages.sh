@@ -25,8 +25,8 @@ fi
 
 chmod +x *.sh
 
-$docker_cmd pull crosbymichael/skydns
-$docker_cmd pull crosbymichael/skydock
+#$docker_cmd pull crosbymichael/skydns
+#$docker_cmd pull crosbymichael/skydock
 
 if [ ! -f "id_rsa" ]; then
   ssh-keygen -f id_rsa -P '' -t rsa
@@ -57,20 +57,20 @@ echo "Building acmeair/auth-service"
 $docker_cmd build -t acmeair/auth-service auth-service
 echo "Building acmeair/webapp"
 $docker_cmd build -t acmeair/webapp webapp
-echo "Building acmeair/microscaler"
-cd microscaler
-./buildmicroscaler.sh
-cd ..
-echo "Building acmeair/microscaler-agent"
-$docker_cmd build -t acmeair/microscaler-agent microscaler-agent
-echo "Building acmeair/asgard"
-$docker_cmd build -t acmeair/asgard asgard
-echo "Building acmeair/ibmjava"
-$docker_cmd build -t acmeair/ibmjava ibmjava
-echo "Building acmeair/liberty"
-$docker_cmd build -t acmeair/liberty liberty
-echo "Building acmeair/auth-service-liberty"
-$docker_cmd build -t acmeair/auth-service-liberty auth-service-liberty
-echo "Building acmeair/webapp-liberty"
-$docker_cmd build -t acmeair/webapp-liberty webapp-liberty
+#echo "Building acmeair/microscaler"
+#cd microscaler
+#./buildmicroscaler.sh
+#cd ..
+#echo "Building acmeair/microscaler-agent"
+#$docker_cmd build -t acmeair/microscaler-agent microscaler-agent
+#echo "Building acmeair/asgard"
+#$docker_cmd build -t acmeair/asgard asgard
+#echo "Building acmeair/ibmjava"
+#$docker_cmd build -t acmeair/ibmjava ibmjava
+#echo "Building acmeair/liberty"
+#$docker_cmd build -t acmeair/liberty liberty
+#echo "Building acmeair/auth-service-liberty"
+#$docker_cmd build -t acmeair/auth-service-liberty auth-service-liberty
+#echo "Building acmeair/webapp-liberty"
+#$docker_cmd build -t acmeair/webapp-liberty webapp-liberty
 
