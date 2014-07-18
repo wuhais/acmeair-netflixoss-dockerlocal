@@ -23,7 +23,7 @@ RUN wget -q https://archive.apache.org/dist/cassandra/2.0.7/apache-cassandra-2.0
   rm /apache-cassandra-*.tar.gz*
  
 RUN sed -i 's/\(.*_address:\).*/\1/' /opt/cassandra/conf/cassandra.yaml
-RUN sed -i 's/\(- seeds: "\).*"/\1cassandra1.cassandra.local.flyacmeair.net"/' /opt/cassandra/conf/cassandra.yaml
+#RUN sed -i 's/\(- seeds: "\).*"/\1localhost"/' /opt/cassandra/conf/cassandra.yaml
 RUN sed -i 's/\(endpoint_snitch: \).*/\1RackInferringSnitch/' /opt/cassandra/conf/cassandra.yaml
 
 RUN echo 'export PATH=/opt/cassandra/bin:$PATH' > /etc/profile.d/cassandra.sh
@@ -32,6 +32,7 @@ ENV MAX_HEAP_SIZE 48m
 ENV HEAP_NEWSIZE 12m
 
 ADD cassandra.conf /etc/supervisor/conf.d/cassandra.conf
+ADD fixaddress_and_start.sh /opt/cassandra/fixaddress_and_start.sh
 
 CMD ["/usr/bin/supervisord", "-n"]
 

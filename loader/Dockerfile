@@ -24,13 +24,11 @@ RUN wget -qO /opt/app.zip \
   cd acmeair-loader/bin &&\
   chmod +x acmeair-loader &&\
   wget -q https://acmeair.ci.cloudbees.com/job/acmeair-netflix-astyanax/lastSuccessfulBuild/artifact/acmeair-services-astyanax/src/main/resources/acmeair-cql.txt &&\
-  sed -i 's/DROP/\/\/DROP/' acmeair-cql.txt
+  sed -i 's/DROP/\/\/DROP/' acmeair-cql.txt &&\
+  rm /etc/supervisor/conf.d/cassandra.conf
 
-ENV JAVA_OPTS -Dcom.acmeair.cassandra.contactpoint=cassandra1.cassandra.local.flyacmeair.net
+ADD loaddb.sh /root/loaddb.sh
 
-CMD /opt/cassandra/bin/cqlsh \
-    -f /opt/acmeair-loader/bin/acmeair-cql.txt \
-    cassandra1.cassandra.local.flyacmeair.net &&\
-  cd /opt/acmeair-loader/bin &&\
-  ./acmeair-loader
+EXPOSE 22
 
+CMD ["/usr/bin/supervisord", "-n"]

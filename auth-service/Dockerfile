@@ -24,6 +24,9 @@ RUN cd /opt/tomcat/webapps &&\
 
 ADD ACMEAIR_AUTH_SERVICE-docker.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/ACMEAIR_AUTH_SERVICE-docker.properties
 ADD config.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/config.properties
+ADD fixaddress_and_start.sh /opt/tomcat/fixaddress_and_start.sh
+# overwrite the basic tomcat start script for now to ensure address fixing script is called
+ADD tomcat.conf /etc/supervisor/conf.d/tomcat.conf
 
 ENV CATALINA_OPTS -Xmx48m
 ENV SERVICE_NAME auth-service

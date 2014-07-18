@@ -20,10 +20,16 @@ RUN cd /opt/tomcat/webapps &&\
   cd ROOT &&\
   wget -qO app.war https://acmeair.ci.cloudbees.com/job/acmeair-netflix-astyanax/lastSuccessfulBuild/artifact/acmeair-webapp-tc7/build/libs/acmeair-webapp-tc7-0.1.0-SNAPSHOT.war &&\
   jar xf app.war &&\
+  rm WEB-INF/lib/ribbon-eureka-*.jar &&\
   rm app.war
 
+# this is a temp patch (for now) that tells ribbon to use ipAddr instead of hostname
+ADD ribbon-eureka-0.3.13.jar /opt/tomcat/webapps/ROOT/WEB-INF/lib/ribbon-eureka-0.3.13.jar
 ADD ACMEAIR_WEBAPP-docker.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/ACMEAIR_WEBAPP-docker.properties
 ADD config.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/config.properties
+ADD fixaddress_and_start.sh /opt/tomcat/fixaddress_and_start.sh
+# overwrite the basic tomcat start script for now to ensure address fixing script is called
+ADD tomcat.conf /etc/supervisor/conf.d/tomcat.conf
 
 ENV CATALINA_OPTS -Xmx48m
 ENV SERVICE_NAME webapp
