@@ -1,0 +1,178 @@
+{
+  "apps": [
+    {
+      "id": "mesos-acmeair-auth-service",
+      "cmd": "docker run -e \"CASSANDRAHOSTNAME=172.17.0.45\" -e \"EUREKAHOSTNAME=172.17.0.47\" aspyker/mesos-acmeair-auth-service",
+      "env": {
+        
+      },
+      "instances": 1,
+      "cpus": 0.1,
+      "mem": 256.0,
+      "disk": 100.0,
+      "executor": "",
+      "constraints": [
+        
+      ],
+      "uris": [
+        
+      ],
+      "ports": [
+        13044
+      ],
+      "taskRateLimit": 1.0,
+      "container": null,
+      "healthChecks": [
+        
+      ],
+      "version": "2014-07-21T20:22:18.321Z",
+      "tasksStaged": 0,
+      "tasksRunning": 1
+    },
+    {
+      "id": "mesos-acmeair-cassandra",
+      "cmd": "docker run aspyker/mesos-acmeair-cassandra",
+      "env": {
+        
+      },
+      "instances": 1,
+      "cpus": 0.1,
+      "mem": 256.0,
+      "disk": 100.0,
+      "executor": "",
+      "constraints": [
+        
+      ],
+      "uris": [
+        
+      ],
+      "ports": [
+        13369
+      ],
+      "taskRateLimit": 1.0,
+      "container": null,
+      "healthChecks": [
+        
+      ],
+      "version": "2014-07-21T18:59:29.738Z",
+      "tasksStaged": 0,
+      "tasksRunning": 1
+    },
+    {
+      "id": "mesos-acmeair-eureka",
+      "cmd": "docker run aspyker/mesos-acmeair-eureka",
+      "env": {
+        
+      },
+      "instances": 1,
+      "cpus": 0.1,
+      "mem": 256.0,
+      "disk": 100.0,
+      "executor": "",
+      "constraints": [
+        
+      ],
+      "uris": [
+        
+      ],
+      "ports": [
+        10674
+      ],
+      "taskRateLimit": 1.0,
+      "container": null,
+      "healthChecks": [
+        
+      ],
+      "version": "2014-07-21T19:02:58.265Z",
+      "tasksStaged": 0,
+      "tasksRunning": 1
+    },
+    {
+      "id": "mesos-acmeair-loader",
+      "cmd": "docker run aspyker/mesos-acmeair-loader",
+      "env": {
+        
+      },
+      "instances": 1,
+      "cpus": 0.1,
+      "mem": 256.0,
+      "disk": 0.0,
+      "executor": "",
+      "constraints": [
+        
+      ],
+      "uris": [
+        
+      ],
+      "ports": [
+        12644
+      ],
+      "taskRateLimit": 1.0,
+      "container": null,
+      "healthChecks": [
+        
+      ],
+      "version": "2014-07-21T19:00:46.750Z",
+      "tasksStaged": 0,
+      "tasksRunning": 1
+    },
+    {
+      "id": "mesos-acmeair-webapp",
+      "cmd": "docker run -e \"CASSANDRAHOSTNAME=172.17.0.45\" -e \"EUREKAHOSTNAME=172.17.0.47\" aspyker/mesos-acmeair-webapp",
+      "env": {
+        
+      },
+      "instances": 1,
+      "cpus": 0.1,
+      "mem": 256.0,
+      "disk": 100.0,
+      "executor": "",
+      "constraints": [
+        
+      ],
+      "uris": [
+        
+      ],
+      "ports": [
+        18953
+      ],
+      "taskRateLimit": 1.0,
+      "container": null,
+      "healthChecks": [
+        
+      ],
+      "version": "2014-07-21T19:11:08.751Z",
+      "tasksStaged": 0,
+      "tasksRunning": 1
+    },
+    {
+      "id": "mesos-acmeair-zuul",
+      "cmd": "docker run -p=80:80 -e \"EUREKAHOSTNAME=172.17.0.47\" aspyker/mesos-acmeair-zuul",
+      "env": {
+        
+      },
+      "instances": 1,
+      "cpus": 0.1,
+      "mem": 256.0,
+      "disk": 100.0,
+      "executor": "",
+      "constraints": [
+        
+      ],
+      "uris": [
+        
+      ],
+      "ports": [
+        11452
+      ],
+      "taskRateLimit": 1.0,
+      "container": null,
+      "healthChecks": [
+        
+      ],
+      "version": "2014-07-21T19:21:28.731Z",
+      "tasksStaged": 0,
+      "tasksRunning": 1
+    }
+  ]
+}
