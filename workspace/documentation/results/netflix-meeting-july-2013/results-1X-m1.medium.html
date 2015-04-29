@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Testing results</title>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script>
+$(function() {
+  $( document ).tooltip({
+      position: {
+         my: "center bottom-20",
+         at: "center top",
+         using: function( position, feedback ) {
+            $( this ).css( position );
+            $( "<div>" )
+            .addClass( "arrow" )
+            .addClass( feedback.vertical )
+            .addClass( feedback.horizontal )
+            .appendTo( this );
+         }
+      },
+      content: function() {
+        return $(this).attr('title');
+     },
+     showURL: false
+  });
+});
+</script>
+
+<style>
+.ui-tooltip, .arrow:after {
+  background: black;
+  border: 2px solid white;
+}
+.ui-tooltip {
+  padding: 10px 20px;
+  color: white;
+  border-radius: 20px;
+  box-shadow: 0 0 7px black;
+}
+
+.arrow {
+  width: 70px;
+  height: 16px;
+  overflow: hidden;
+  position: absolute;
+  left: 50%;
+  margin-left: -35px;
+  bottom: -16px;
+}
+.arrow.top {
+  top: -16px;
+  bottom: auto;
+}
+
+.arrow.left {
+  left: 20%;
+}
+
+.arrow:after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: -20px;
+  width: 25px;
+  height: 25px;
+  box-shadow: 6px 5px 9px -9px black;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  tranform: rotate(45deg);
+}
+.arrow.top:after {
+  bottom: -20px;
+  top: auto;
+}
+</style>
+
+
+
+
+	<script type="text/javascript">
+		google.load("visualization", "1", {packages:["corechart"]});
+		google.setOnLoadCallback(drawChart1);
+		function drawChart1() {
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Time'); // Implicit domain label col
+			data.addColumn('number', 'Num Req'); // Implicit series 1 data col.
+			data.addColumn({type:'string',role:'tooltip'});
+			data.addRows([
+				['0.0 s - 0.5 s ',23132,'0.0 s - 0.5 s  \n Num Request: 23,132( 100%) of 23,158'],
+							['0.5 s - 1.0 s ',26,'0.5 s - 1.0 s  \n Num Request: 26( 0%) of 23,158']
+			]);
+			var options = {
+				title: 'BookFlight',
+				vAxis: {title: 'number of requests', titleTextStyle: {color: 'black'}},
+				series: [{color: 'blue', visibleInLegend: false}],
+				hAxis: {title: 'latency', titleTextStyle: {color: 'black'}},
+				width: 1200,
+			    height: 500
+			};
+			var chart = new google.visualization.LineChart(document.getElementById('chart_1'));
+			chart.draw(data, options);
+		}
+	</script>
+
+	<script type="text/javascript">
+		google.load("visualization", "1", {packages:["corechart"]});
+		google.setOnLoadCallback(drawChart1);
+		function drawChart1() {
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Time'); // Implicit domain label col
+			data.addColumn('number', 'Num Req'); // Implicit series 1 data col.
+			data.addColumn({type:'string',role:'tooltip'});
+			data.addRows([
+				['0.0 s - 0.5 s ',43048,'0.0 s - 0.5 s  \n Num Request: 43,048( 100%) of 43,075'],
+							['0.5 s - 1.0 s ',27,'0.5 s - 1.0 s  \n Num Request: 27( 0%) of 43,075']
+			]);
+			var options = {
+				title: 'Cancel Booking',
+				vAxis: {title: 'number of requests', titleTextStyle: {color: 'black'}},
+				series: [{color: 'blue', visibleInLegend: false}],
+				hAxis: {title: 'latency', titleTextStyle: {color: 'black'}},
+				width: 1200,
+			    height: 500
+			};
+			var chart = new google.visualization.LineChart(document.getElementById('chart_2'));
+			chart.draw(data, options);
+		}
+	</script>
+
+	<script type="text/javascript">
+		google.load("visualization", "1", {packages:["corechart"]});
+		google.setOnLoadCallback(drawChart1);
+		function drawChart1() {
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Time'); // Implicit domain label col
+			data.addColumn('number', 'Num Req'); // Implicit series 1 data col.
+			data.addColumn({type:'string',role:'tooltip'});
+			data.addRows([
+				['0.0 s - 0.5 s ',28787,'0.0 s - 0.5 s  \n Num Request: 28,787( 100%) of 28,802'],
+							['0.5 s - 1.0 s ',15,'0.5 s - 1.0 s  \n Num Request: 15( 0%) of 28,802']
+			]);
+			var options = {
+				title: 'Login',
+				vAxis: {title: 'number of requests', titleTextStyle: {color: 'black'}},
+				series: [{color: 'blue', visibleInLegend: false}],
+				hAxis: {title: 'latency', titleTextStyle: {color: 'black'}},
+				width: 1200,
+			    height: 500
+			};
+			var chart = new google.visualization.LineChart(document.getElementById('chart_3'));
+			chart.draw(data, options);
+		}
+	</script>
+
+	<script type="text/javascript">
+		google.load("visualization", "1", {packages:["corechart"]});
+		google.setOnLoadCallback(drawChart1);
+		function drawChart1() {
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Time'); // Implicit domain label col
+			data.addColumn('number', 'Num Req'); // Implicit series 1 data col.
+			data.addColumn({type:'string',role:'tooltip'});
+			data.addRows([
+				['0.0 s - 0.5 s ',28736,'0.0 s - 0.5 s  \n Num Request: 28,736( 100%) of 28,747'],
+							['0.5 s - 1.0 s ',11,'0.5 s - 1.0 s  \n Num Request: 11( 0%) of 28,747']
+			]);
+			var options = {
+				title: 'logout',
+				vAxis: {title: 'number of requests', titleTextStyle: {color: 'black'}},
+				series: [{color: 'blue', visibleInLegend: false}],
+				hAxis: {title: 'latency', titleTextStyle: {color: 'black'}},
+				width: 1200,
+			    height: 500
+			};
+			var chart = new google.visualization.LineChart(document.getElementById('chart_4'));
+			chart.draw(data, options);
+		}
+	</script>
+
+	<script type="text/javascript">
+		google.load("visualization", "1", {packages:["corechart"]});
+		google.setOnLoadCallback(drawChart1);
+		function drawChart1() {
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Time'); // Implicit domain label col
+			data.addColumn('number', 'Num Req'); // Implicit series 1 data col.
+			data.addColumn({type:'string',role:'tooltip'});
+			data.addRows([
+				['0.0 s - 0.5 s ',28741,'0.0 s - 0.5 s  \n Num Request: 28,741( 100%) of 28,757'],
+							['0.5 s - 1.0 s ',16,'0.5 s - 1.0 s  \n Num Request: 16( 0%) of 28,757']
+			]);
+			var options = {
+				title: 'List Bookings',
+				vAxis: {title: 'number of requests', titleTextStyle: {color: 'black'}},
+				series: [{color: 'blue', visibleInLegend: false}],
+				hAxis: {title: 'latency', titleTextStyle: {color: 'black'}},
+				width: 1200,
+			    height: 500
+			};
+			var chart = new google.visualization.LineChart(document.getElementById('chart_5'));
+			chart.draw(data, options);
+		}
+	</script>
+
+	<script type="text/javascript">
+		google.load("visualization", "1", {packages:["corechart"]});
+		google.setOnLoadCallback(drawChart1);
+		function drawChart1() {
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Time'); // Implicit domain label col
+			data.addColumn('number', 'Num Req'); // Implicit series 1 data col.
+			data.addColumn({type:'string',role:'tooltip'});
+			data.addRows([
+				['0.0 s - 0.5 s ',143849,'0.0 s - 0.5 s  \n Num Request: 143,849( 100%) of 143,908'],
+							['0.5 s - 1.0 s ',59,'0.5 s - 1.0 s  \n Num Request: 59( 0%) of 143,908']
+			]);
+			var options = {
+				title: 'QueryFlight',
+				vAxis: {title: 'number of requests', titleTextStyle: {color: 'black'}},
+				series: [{color: 'blue', visibleInLegend: false}],
+				hAxis: {title: 'latency', titleTextStyle: {color: 'black'}},
+				width: 1200,
+			    height: 500
+			};
+			var chart = new google.visualization.LineChart(document.getElementById('chart_6'));
+			chart.draw(data, options);
+		}
+	</script>
+
+	<script type="text/javascript">
+		google.load("visualization", "1", {packages:["corechart"]});
+		google.setOnLoadCallback(drawChart1);
+		function drawChart1() {
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Time'); // Implicit domain label col
+			data.addColumn('number', 'Num Req'); // Implicit series 1 data col.
+			data.addColumn({type:'string',role:'tooltip'});
+			data.addRows([
+				['0.0 s - 0.5 s ',7188,'0.0 s - 0.5 s  \n Num Request: 7,188( 100%) of 7,197'],
+							['0.5 s - 1.0 s ',9,'0.5 s - 1.0 s  \n Num Request: 9( 0%) of 7,197']
+			]);
+			var options = {
+				title: 'Update Customer',
+				vAxis: {title: 'number of requests', titleTextStyle: {color: 'black'}},
+				series: [{color: 'blue', visibleInLegend: false}],
+				hAxis: {title: 'latency', titleTextStyle: {color: 'black'}},
+				width: 1200,
+			    height: 500
+			};
+			var chart = new google.visualization.LineChart(document.getElementById('chart_7'));
+			chart.draw(data, options);
+		}
+	</script>
+
+	<script type="text/javascript">
+		google.load("visualization", "1", {packages:["corechart"]});
+		google.setOnLoadCallback(drawChart1);
+		function drawChart1() {
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Time'); // Implicit domain label col
+			data.addColumn('number', 'Num Req'); // Implicit series 1 data col.
+			data.addColumn({type:'string',role:'tooltip'});
+			data.addRows([
+				['0.0 s - 0.5 s ',7194,'0.0 s - 0.5 s  \n Num Request: 7,194( 100%) of 7,199'],
+							['0.5 s - 1.0 s ',5,'0.5 s - 1.0 s  \n Num Request: 5( 0%) of 7,199']
+			]);
+			var options = {
+				title: 'View Profile Information',
+				vAxis: {title: 'number of requests', titleTextStyle: {color: 'black'}},
+				series: [{color: 'blue', visibleInLegend: false}],
+				hAxis: {title: 'latency', titleTextStyle: {color: 'black'}},
+				width: 1200,
+			    height: 500
+			};
+			var chart = new google.visualization.LineChart(document.getElementById('chart_8'));
+			chart.draw(data, options);
+		}
+	</script>
+
+<script>
+$(function() {
+$( "#Latency_tabs" ).tabs();
+});
+</script>
+
+
+</head>
+
+<body>
+	<div id="main">
+		<div id="logo">
+			<div id="logo_text">
+				<div class="text-align:center">
+					<img src="../images/acmeAirlines.png\" alt="ACME Airlines" />
+				</div>
+				<center>
+					<h1>Run Results</h1>
+				</center>
+			</div>
+		</div>
+		<div class="content">
+
+
+	<font size="4">Average Throughput 516.558 </font><br/> 
+	<font size="4">Operations per day 44,630,602.105
+				(projection based on average throughput) </font><br/> 
+	Min Throughput 494.1<br/> 
+	Max Throughput 530.3<br/> 
+    <font size="1">(Omitted the first and last data points for above statistics ) </font> <br/> <br/>
+	Benchmark Start: 2013/07/11 06:12:30 <br/> 
+	Benchmark End:   2013/07/11 06:22:17 <br/>
+
+<br/><br/>
+	<h2>Response times</h2>
+
+
+	<table border="1">
+				<tr>
+					<th></th>
+					<th>Average</th>
+					<th>Min</th>
+					<th>Max</th>
+					<th>90%</th>
+					<th>Number of Requests</th>
+					<th>Errors</th>
+				</tr>
+				<tr>
+					<td> Overall </td>
+					<td>112 mn </td>
+					<td>4 ms </td> 
+					<td>995 ms</td>
+					<td>187 ms</td>
+					<td>310,843</td>
+					    <td>0</td>
+				</tr>
+	</table> 
+<br/> 
+Breakdown by URL 
+	<table border="1"> 
+				<tr>
+					<th>URL</th>
+					<th>Average</th>
+					<th>Min</th>
+					<th>Max</th>
+					<th>90%</th>
+					<th>Num of Reqs</th>
+					<th>% of All Reqs</th>
+					<th>Errors</th>
+				</tr>
+
+ 			  	<tr><td>BookFlight</td> 
+	    			<td nowrap="nowrap"> 173 ms </td>
+	    			<td nowrap="nowrap"> 9 ms </td> 
+	    			<td nowrap="nowrap"> 743 ms</td>
+	    			<td nowrap="nowrap"> 243 ms</td>
+	    			<td align="right"> 23,158 </td>
+	    	        <td align="right">7%</td> 	    	            
+				    	<td>0</td>
+            	</tr>
+ 			  	<tr><td>Cancel Booking</td> 
+	    			<td nowrap="nowrap"> 129 ms </td>
+	    			<td nowrap="nowrap"> 7 ms </td> 
+	    			<td nowrap="nowrap"> 723 ms</td>
+	    			<td nowrap="nowrap"> 208 ms</td>
+	    			<td align="right"> 43,075 </td>
+	    	        <td align="right">14%</td> 	    	            
+				    	<td>0</td>
+            	</tr>
+ 			  	<tr><td>Login</td> 
+	    			<td nowrap="nowrap"> 113 ms </td>
+	    			<td nowrap="nowrap"> 6 ms </td> 
+	    			<td nowrap="nowrap"> 607 ms</td>
+	    			<td nowrap="nowrap"> 185 ms</td>
+	    			<td align="right"> 28,802 </td>
+	    	        <td align="right">9%</td> 	    	            
+				    	<td>0</td>
+            	</tr>
+ 			  	<tr><td>logout</td> 
+	    			<td nowrap="nowrap"> 88 ms </td>
+	    			<td nowrap="nowrap"> 5 ms </td> 
+	    			<td nowrap="nowrap"> 556 ms</td>
+	    			<td nowrap="nowrap"> 150 ms</td>
+	    			<td align="right"> 28,747 </td>
+	    	        <td align="right">9%</td> 	    	            
+				    	<td>0</td>
+            	</tr>
+ 			  	<tr><td>List Bookings</td> 
+	    			<td nowrap="nowrap"> 112 ms </td>
+	    			<td nowrap="nowrap"> 6 ms </td> 
+	    			<td nowrap="nowrap"> 995 ms</td>
+	    			<td nowrap="nowrap"> 194 ms</td>
+	    			<td align="right"> 28,757 </td>
+	    	        <td align="right">9%</td> 	    	            
+				    	<td>0</td>
+            	</tr>
+ 			  	<tr><td>QueryFlight</td> 
+	    			<td nowrap="nowrap"> 99 ms </td>
+	    			<td nowrap="nowrap"> 4 ms </td> 
+	    			<td nowrap="nowrap"> 664 ms</td>
+	    			<td nowrap="nowrap"> 161 ms</td>
+	    			<td align="right"> 143,908 </td>
+	    	        <td align="right">46%</td> 	    	            
+				    	<td>0</td>
+            	</tr>
+ 			  	<tr><td>Update Customer</td> 
+	    			<td nowrap="nowrap"> 157 ms </td>
+	    			<td nowrap="nowrap"> 12 ms </td> 
+	    			<td nowrap="nowrap"> 655 ms</td>
+	    			<td nowrap="nowrap"> 213 ms</td>
+	    			<td align="right"> 7,197 </td>
+	    	        <td align="right">2%</td> 	    	            
+				    	<td>0</td>
+            	</tr>
+ 			  	<tr><td>View Profile Information</td> 
+	    			<td nowrap="nowrap"> 127 ms </td>
+	    			<td nowrap="nowrap"> 7 ms </td> 
+	    			<td nowrap="nowrap"> 600 ms</td>
+	    			<td nowrap="nowrap"> 199 ms</td>
+	    			<td align="right"> 7,199 </td>
+	    	        <td align="right">2%</td> 	    	            
+				    	<td>0</td>
+            	</tr>
+	</table> 
+	
+<h2> Latency Distribution </h2> 
+	<div id="Latency_tabs">	
+	<ul>
+          <li><a href="#tabs-1">BookFlight</a></li>
+          <li><a href="#tabs-2">Cancel Booking</a></li>
+          <li><a href="#tabs-3">Login</a></li>
+          <li><a href="#tabs-4">logout</a></li>
+          <li><a href="#tabs-5">List Bookings</a></li>
+          <li><a href="#tabs-6">QueryFlight</a></li>
+          <li><a href="#tabs-7">Update Customer</a></li>
+          <li><a href="#tabs-8">View Profile Information</a></li>
+	</ul>
+		
+		<div id="tabs-1">
+		<div id="chart_1"></div>
+		</div>
+		<div id="tabs-2">
+		<div id="chart_2"></div>
+		</div>
+		<div id="tabs-3">
+		<div id="chart_3"></div>
+		</div>
+		<div id="tabs-4">
+		<div id="chart_4"></div>
+		</div>
+		<div id="tabs-5">
+		<div id="chart_5"></div>
+		</div>
+		<div id="tabs-6">
+		<div id="chart_6"></div>
+		</div>
+		<div id="tabs-7">
+		<div id="chart_7"></div>
+		</div>
+		<div id="tabs-8">
+		<div id="chart_8"></div>
+		</div>
+	</div>
+	
+		
+	<h2> Run Statistics  </h2> 
+	<table border="1"> 
+		<tr><th>Statistic </th><th> Count</th> </tr>
+		<tr><td>Total number of virtual users  </td>    <td nowrap="nowrap" align="right">60 </td> </tr>
+		<tr><td>Virtual users per workload driver  </td><td nowrap="nowrap" align="right">60 </td> </tr>
+		<tr><td>jMeter files processed   </td>          <td nowrap="nowrap" align="right">1 </td> </tr>
+		<tr><td>Flights queries with zero results  </td>
+			<td nowrap="nowrap" align="right"> 27,410</td></tr>
+		<tr><td> Number of flights returned  </td>   
+			<td nowrap="nowrap" align="right"> 116,498</td></tr>
+		<tr><td> Average number of flights returned </td>
+			<td nowrap="nowrap" align="right"> 0.81 </td></tr>
+		<tr><td> Total One Way flights booked   </td>
+			<td nowrap="nowrap" align="right"> 5,178</td></tr>
+		<tr><td> Percent of flight queries with zero results  </td>
+			<td nowrap="nowrap" align="right"> 19% </td></tr>
+		
+		<tr><td> Percent of bookings skipped due to zero results on query flights </td>
+				<td nowrap="nowrap" align="right">20% </td></tr>
+	</table> 
+	
+	
+	<h2> CPU Summary </h2> 
+	<table border="1"> 
+		<tr><th></th><th>CPU Average</th><th>CPU Min</th> <th>CPU Max</th><th>Number of Systems</th></tr>		
+			<tr><td>JMeter for WLP</td><td>27.41%</td><td>18.2%</td> <td>100%</td> <td>1</td> </tr> 
+			<tr><td>Liberty</td><td>64.09%</td><td>1%</td> <td>100%</td> <td>2</td> </tr> 
+			<tr><td>Container</td><td>65%</td><td>54.1%</td> <td>75.8%</td> <td>1</td> </tr> 
+	</table> 
+	
+	
+	<h2> Logs Summary </h2> 
+	<h2> Liberty </h2> 
+    Number of log files processed = 0  <br/>
+    <table border="1">
+		<tr><th>Exception</th><th>Type </th> <th>Occurances</th><th>Number of Hosts</th><th>Description</th></tr> 
+	</table> 				
+	
+<br/><hr/>
+<h2> Result Graphs </h2> 
+   
+   <ul>	
+		<li><a href="#Acmeair Throughputs Total">Acmeair Throughputs Total</a></li>
+		<li><a href="#Throughputs">Throughputs</a></li>
+		<li><a href="#JMeter to WLP Servers (Nginx first) CPU Utilization">JMeter to WLP Servers (Nginx first) CPU Utilization</a></li>
+		<li><a href="#WLP Servers CPU Utilization">WLP Servers CPU Utilization</a></li>
+		<li><a href="#Container Servers CPU Utilization">Container Servers CPU Utilization</a></li>
+	</ul>
+	
+		  	<a name="Acmeair Throughputs Total"></a><h3>Acmeair Throughputs Total</h3>	  	
+				<img src="http://chart.apis.google.com/chart?cht=lc&chls=2,1,0&chco=CA3D05&chs=1000x300&chxt=y,y,x,x&chts=000000,16&chxp=1,50.0|3,50.0&chg=100.0,10.0,3,2&chm=d,CA3D05,0,-1,6,0&chd=s:t1122322z102212322212&chtt=Acmeair+Throughputs+Total&chxs=1,000000,13,0|3,000000,13,0&chf=bg,s,F0F8FF|c,lg,0,E6E6FA,1.0,FFFFFF,0.0&chxr=0,0.0,589.2222222222222|1,0.0,100.0|3,0.0,100.0&chxl=1:|calls%2Fs|2:|06%3A12%3A30|06%3A13%3A30|06%3A15%3A00|06%3A16%3A00|06%3A17%3A30|06%3A18%3A30|06%3A20%3A00|06%3A21%3A00|06%3A22%3A17|3:|">
+		  	<a name="Throughputs"></a><h3>Throughputs</h3>	  	
+				<img src="http://chart.apis.google.com/chart?cht=lc&chls=2,1,0&chco=FF0000&chs=1000x300&chxt=y,y,x,x&chts=000000,16&chtt=Throughputs&chxp=1,50.0|3,50.0&chg=100.0,10.0,3,2&chd=s:t1122322z102212322212&chdl=10.138.26.17+AcmeAir1.log&chxs=1,000000,13,0|3,000000,13,0&chf=bg,s,F0F8FF|c,lg,0,E6E6FA,1.0,FFFFFF,0.0&chxr=0,0.0,589.2222222222222|1,0.0,100.0|3,0.0,100.0&chxl=1:|calls%2Fs|2:|06%3A12%3A30|06%3A13%3A30|06%3A15%3A00|06%3A16%3A00|06%3A17%3A30|06%3A18%3A30|06%3A20%3A00|06%3A21%3A00|06%3A22%3A17|3:|">
+		  	<a name="JMeter to WLP Servers (Nginx first) CPU Utilization"></a><h3>JMeter to WLP Servers (Nginx first) CPU Utilization</h3>	  	
+				<img src="http://chart.apis.google.com/chart?cht=lc&chls=2,1,0&chco=FF0000&chs=1000x300&chxt=y,y,x,x&chts=000000,16&chdl=10.138.26.17&chxp=1,50.0|3,50.0&chg=100.0,10.0,3,2&chxs=1,000000,13,0|3,000000,13,0&chxr=0,0.0,100.0|1,0.0,100.0|3,0.0,100.0&chf=bg,s,F0F8FF|c,lg,0,E6E6FA,1.0,FFFFFF,0.0&chtt=JMeter+to+WLP+Servers+%28Nginx+first%29+CPU+Utilization&chd=s:XOA999SQQONOOPONPQQQPONOPPOLOMNMPNNNNNOOMPPPPOPQPPOPPQNQOPNPPAAAA&chxl=1:|usr%25%2Bsys%25|2:|06%3A11%3A53|06%3A13%3A13|06%3A14%3A38|06%3A15%3A58|06%3A17%3A23|06%3A18%3A48|06%3A20%3A08|06%3A21%3A33|06%3A22%3A58|3:|">
+		  	<a name="WLP Servers CPU Utilization"></a><h3>WLP Servers CPU Utilization</h3>	  	
+				<img src="http://chart.apis.google.com/chart?cht=lc&chs=1000x300&chxt=y,y,x,x&chts=000000,16&chls=2,1,0|2,1,0&chxp=1,50.0|3,50.0&chg=100.0,10.0,3,2&chco=FF0000,000000&chxs=1,000000,13,0|3,000000,13,0&chtt=WLP+Servers+CPU+Utilization&chdl=10.138.40.20|10.236.134.168&chxr=0,0.0,100.0|1,0.0,100.0|3,0.0,100.0&chf=bg,s,F0F8FF|c,lg,0,E6E6FA,1.0,FFFFFF,0.0&chd=s:aRASTUTSSSSUTTTTUTSTUSSTUSTSSTSSTSRTSSSTOSSSTTTSRTTSRUSTRSSSSABAA,9AW8899999999999999989999999999999799899999999899799999989999LAAA&chxl=1:|usr%25%2Bsys%25|2:|06%3A11%3A54|06%3A13%3A14|06%3A14%3A39|06%3A15%3A59|06%3A17%3A24|06%3A18%3A49|06%3A20%3A09|06%3A21%3A34|06%3A22%3A59|3:|">
+		  	<a name="Container Servers CPU Utilization"></a><h3>Container Servers CPU Utilization</h3>	  	
+				<img src="http://chart.apis.google.com/chart?cht=lc&chls=2,1,0&chco=FF0000&chs=1000x300&chxt=y,y,x,x&chts=000000,16&chdl=10.139.24.83&chxp=1,50.0|3,50.0&chg=100.0,10.0,3,2&chxs=1,000000,13,0|3,000000,13,0&chtt=Container+Servers+CPU+Utilization&chxr=0,0.0,100.0|1,0.0,100.0|3,0.0,100.0&chf=bg,s,F0F8FF|c,lg,0,E6E6FA,1.0,FFFFFF,0.0&chd=s:mlAlqonkooprqpqppqppprpppolkkmlloouonmlohoonpnmnnoooloooklpuoAAAA&chxl=1:|usr%25%2Bsys%25|2:|06%3A11%3A53|06%3A13%3A13|06%3A14%3A38|06%3A15%3A58|06%3A17%3A23|06%3A18%3A48|06%3A20%3A08|06%3A21%3A33|06%3A22%3A58|3:|">
+	  	
+<br/><hr/>
+Report generated: Jul 11, 2013 2:24:21 AM AcmeAir Benchmark test results </br>
+	</div>
+</body>
+</html> 

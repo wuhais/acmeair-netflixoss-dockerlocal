@@ -1,0 +1,2 @@
+rootProject.name='acmeairnetflix'
+include 'acmeair-common', 'acmeair-driver', 'acmeair-loader', 'acmeair-services', 'acmeair-services-wxs', 'acmeair-webapp', 'acmeair-webapp-tc7', 'acmeair-webapp-wlp', 'acmeair-auth-service', 'acmeair-auth-service-tc7', 'acmeair-auth-service-wlp'

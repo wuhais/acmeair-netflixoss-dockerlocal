@@ -1,0 +1,477 @@
+// *****************************************************************************
+// Copyright (c) 2013 IBM Corp.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ****************************************************************************/
+
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath group: 'net.schmizz', name: 'sshj', version: '0.8.1'
+		classpath group: 'org.bouncycastle', name: 'bcprov-jdk16', version: '1.46'
+		classpath group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.3.12'
+		classpath group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.8'
+		classpath group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.8'
+		classpath group: 'org.codehaus.gpars', name: 'gpars', version: '0.12'
+		
+		classpath group: 'org.codehaus.groovy.modules.http-builder', name: 'http-builder', version: '0.6'
+	}
+}
+
+import net.schmizz.sshj.SSHClient;
+import java.security.PublicKey
+import net.schmizz.sshj.transport.verification.HostKeyVerifier;
+import net.schmizz.sshj.common.IOUtils;
+import net.schmizz.sshj.xfer.FileSystemFile;
+import java.util.concurrent.TimeUnit;
+import groovyx.gpars.GParsPool;
+
+import groovyx.net.http.RESTClient
+import groovy.util.slurpersupport.GPathResult
+import static groovyx.net.http.ContentType.URLENC
+
+def config = new ConfigSlurper().parse(new File('cloud.groovy').toURL())
+
+class Instance {
+	String instanceId
+	String publicIpAddress
+	String privateIpAddress
+}
+
+class Verifier implements HostKeyVerifier {
+	public boolean verify(String hostname,
+		int port,
+		PublicKey key) {
+		return true
+	}
+}
+
+def sshExec(config, hosts, sshClientClosure, sshExecCmdClosure, timeout =30) {
+	GParsPool.withPool 15, {
+		hosts.eachParallel {
+			def host = it
+
+			def client = new SSHClient()
+			client.addHostKeyVerifier(new Verifier())
+			
+			println("SSHExec on $host for user = $config.cloud.user" )
+			client.connect("$host")
+			
+			println("using keyfile for SSH => $config.cloud.keyFile")
+			def keys = client.loadKeys("$config.cloud.keyFile")
+			client.authPublickey("$config.cloud.user", keys)
+			
+			// First allow access to sshClient to perform SCP operations
+			sshClientClosure(client)
+			
+			// Now configure the instance
+			def session = client.startSession();
+			// Issue the command here, and wait for results, allowing the Command to be built dynamically
+			def cmd = session.exec(sshExecCmdClosure(host));
+			cmd.join(timeout, TimeUnit.SECONDS);
+			println("$host:\n" + IOUtils.readFully(cmd.getInputStream()).toString())
+			session.close()
+			client.disconnect()
+		}
+	}
+}
+
+def sshSCP(config, instances, sshClientClosure, timeout = 30) {
+	GParsPool.withPool 15, {
+		instances.eachParallel {
+			def host = it
+
+			def client = new SSHClient()
+			client.addHostKeyVerifier(new Verifier())
+			
+			println("sshSCP on $host for user = $config.cloud.user" )
+			client.connect("$host")
+			
+			def keys = client.loadKeys("$config.cloud.keyFile")
+			client.authPublickey("$config.cloud.user", keys)
+
+			try {
+				println("Preparing to perform SCP for IP = $host")
+				sshClientClosure(client)
+				println("Returned from SCP for IP = $host")
+			}
+			catch (Exception e) {
+				println(e.getMessage())
+				println ("Exception thrown from this ip: $host !!!")
+				e.printStackTrace(System.out)
+			}
+			finally {
+				client.disconnect()
+			}
+		}
+	}
+}
+
+
+task ("startJMeterCluster") {
+	doLast {
+		// note - for sshExec to work this way, we need to make the following changes to /etc/sudoers
+		// the first allows the ssh to sudo without a tty.  the second allows ec2-user to sudo any command
+		// #Defaults    requiretty
+		// ec2-user        ALL=(ALL)       ALL
+		
+		def cmd = "";
+		cmd = "cd /opt/acmeair-netflix/acmeair-driver/src/main/scripts;"
+		cmd = cmd + "sudo killall -9 java;"
+		cmd = cmd + "sudo rm *1.*;"
+		cmd = cmd + "sudo pwd;"
+		cmd = cmd + "sudo chmod +x runjmeter.sh;"
+		cmd = cmd + "sudo ./runjmeter.sh;"
+		println("cmd = $cmd")
+		sshExec(
+			config,
+			config.cloud.hard_coded_publicip_list_cluster_driver,
+			{client -> },
+			{privateIp -> cmd },300
+		)
+	}
+}
+
+task ("updateJMeterHosts") {
+	doLast {
+		new File('hosts.csv.updated').withWriter {
+			out -> config.cloud.hard_coded_privateip_list_cluster_webapp.each {
+      			out.println it
+      		}
+    	}
+    	
+		def cmd = "";
+		cmd = "sudo cp -v ~ec2-user/hosts.csv.updated /opt/acmeair-netflix/acmeair-driver/src/main/scripts/hosts.csv;"
+    	sshExec(
+    		config,
+			config.cloud.hard_coded_publicip_list_cluster_driver,
+			{client -> client.newSCPFileTransfer().upload(new FileSystemFile("hosts.csv.updated"), 'hosts.csv.updated');},
+			{privateIp -> cmd}, 10
+		)
+	}
+}
+
+task ("killJMeterCluster") {
+	doLast {
+		def cmd = "";
+		cmd = cmd + "sudo killall -9 java;"
+		println("cmd = $cmd")
+		sshExec(
+			config,
+			config.cloud.hard_coded_publicip_list_cluster_driver,
+			{client -> },
+			{privateIp -> cmd },300
+		)
+	}
+}
+
+task ("killWXSContainerCluster") {
+	doLast {
+		def cmd = "";
+		cmd = cmd + "sudo killall -9 java;"
+		println("cmd = $cmd")
+		sshExec(
+			config,
+			config.cloud.hard_coded_publicip_list_cluster_wxs_container,
+			{client -> },
+			{privateIp -> cmd },300
+		)
+	}
+}
+
+task ("updateWXSContainerCluster") {
+	doLast {
+		def cmd = "";
+		cmd = cmd + "cd /opt/ObjectGrid/acmeair-netflixtech/server/config;"
+		cmd = cmd + 'sudo sed -i s/\"13\"/\"83\"/g deployment.xml;'
+		println("cmd = $cmd")
+		sshExec(
+			config,
+			config.cloud.hard_coded_publicip_list_cluster_wxs_container,
+			{client -> },
+			{privateIp -> cmd },300
+		)
+	}
+}
+
+task ("stopAuthServiceCluster") {
+	doLast {
+		def cmd = "";
+		cmd = cmd + "cd /opt/apache-tomcat-7.0.37/;";
+		cmd = cmd + "sudo bin/shutdown.sh;"
+		println("cmd = $cmd")
+		sshExec(
+			config,
+			config.cloud.hard_coded_publicip_list_cluster_auth_service,
+			{client -> },
+			{privateIp -> cmd },300
+		)
+	}
+}
+
+// TODO: Not working yet
+task ("startAuthServiceCluster") {
+	doLast {
+		def cmd = "";
+		cmd = cmd + "cd /opt/apache-tomcat-7.0.37/;";
+		cmd = cmd + "sudo bin/startup.sh &;"
+		println("cmd = $cmd")
+		sshExec(
+			config,
+			config.cloud.hard_coded_publicip_list_cluster_auth_service,
+			{client -> },
+			{privateIp -> cmd },300
+		)
+	}
+}
+
+task ("stopWebAppCluster") {
+	doLast {
+		def cmd = "";
+		cmd = cmd + "cd /opt/apache-tomcat-7.0.37/;";
+		cmd = cmd + "sudo bin/shutdown.sh;"
+		println("cmd = $cmd")
+		sshExec(
+			config,
+			config.cloud.hard_coded_publicip_list_cluster_webapp,
+			{client -> },
+			{privateIp -> cmd },300
+		)
+	}
+}
+
+// TODO: Not working yet
+task ("startWebAppCluster") {
+	doLast {
+		def cmd = "";
+		cmd = cmd + "/etc/rc.d/init.d/tomcatd start;";
+		println("cmd = $cmd")
+		sshExec(
+			config,
+			config.cloud.hard_coded_publicip_list_cluster_auth_service,
+			{client -> },
+			{privateIp -> cmd },300
+		)
+	}
+}
+
+task ("startWXSContainerCluster") {
+	doLast {
+		def cmd = "";
+		cmd = cmd + "sudo nohup service wxscontainer start;"
+		println("cmd = $cmd")
+		sshExec(
+			config,
+			config.cloud.hard_coded_publicip_list_cluster_wxs_container,
+			{client -> },
+			{privateIp -> cmd },300
+		)
+	}
+}
+
+def getClusterInfo(clusterName, skipUnderscore = false) {
+		def clusterList = [];
+		def rest = new RESTClient('http://' + asgardHostPort + '/')
+		rest.auth.basic asgardUser, asgardPass
+		try {
+			rest.get(path : 'us-east-1/cluster/show/acmeair' + (skipUnderscore ? '' : '_') + clusterName + '.json') { resp1, clusterData ->
+				//println(clusterData)
+			
+				for (int ii = 0; ii < clusterData.instances[0].size(); ii++) {
+					def instanceUrl = 'us-east-1/instance/show/' + (clusterData.instances[0])[ii].instanceId + '.json'
+					rest.get(path : instanceUrl) { resp2, instanceData ->
+						//println(instanceData)
+						def instance = new Instance(
+							instanceId : instanceData.instance.instanceId,
+							publicIpAddress : instanceData.instance.publicIpAddress,
+							privateIpAddress : instanceData.instance.privateIpAddress)
+						clusterList.add(instance)
+					}
+				}
+			}
+			return clusterList
+		}
+		catch(e) {
+			println(e);
+		}
+}
+
+def instanceListToString(instances, returnPublic) {
+	def retStr = "["
+	for (int ii = 0; ii < instances.size(); ii++) {
+		def ipAddress = returnPublic ? instances[ii].publicIpAddress : instances[ii].privateIpAddress
+		retStr = retStr + "'" + ipAddress + "'"
+		if (ii != instances.size() - 1) {
+			retStr = retStr + ", "
+		}
+	}
+	return retStr + "]"
+}
+
+def getAllPublicIpsForInstances(config) {
+	def instances = [];
+	instances.addAll(config.cloud.hard_coded_publicip_list_cluster_driver)
+	instances.addAll(config.cloud.hard_coded_publicip_list_cluster_webapp)
+	instances.addAll(config.cloud.hard_coded_publicip_list_cluster_auth_service)
+	instances.addAll(config.cloud.hard_coded_publicip_list_cluster_wxs_container)
+	return instances;
+}
+
+task ("getCurrentAcmeAirConfigFromAsgard") {
+	doLast {
+		if (!project.hasProperty('asgardHostPort') || !project.hasProperty('asgardUser') || !project.hasProperty('asgardPass')) {
+			throw new GradleException("usage:  gradlew getCurrentAcmeAirConfigFromAsgard -PasgardHostPort=1.1.1.1:8080 -PasgardUser=username -PasgardPass=password");
+		}
+		def driverList = getClusterInfo('driver');
+		println('hard_coded_privateip_list_cluster_driver = ' + instanceListToString(driverList, false));
+		println('hard_coded_publicip_list_cluster_driver = ' + instanceListToString(driverList, true));
+		def webAppList = getClusterInfo('webapp', true);
+		println('hard_coded_privateip_list_cluster_webapp = ' + instanceListToString(webAppList, false));
+		println('hard_coded_publicip_list_cluster_webapp = ' + instanceListToString(webAppList, true));
+		def authServiceList = getClusterInfo('auth_service');
+		println('hard_coded_privateip_list_cluster_auth_service = ' + instanceListToString(authServiceList, false));
+		println('hard_coded_publicip_list_cluster_auth_service = ' + instanceListToString(authServiceList, true));
+		def wxsContainerList = getClusterInfo('wxs_container');
+		println('hard_coded_privateip_list_cluster_wxs_container = ' + instanceListToString(wxsContainerList, false));
+		println('hard_coded_publicip_list_cluster_wxs_container = ' + instanceListToString(wxsContainerList, true));
+	}
+}
+
+task ("startNMonOnAllInstances") {
+	def instances = getAllPublicIpsForInstances(config);
+	doLast {
+		def cmd = "";
+		cmd = "cd /opt/nmon;"
+		cmd = cmd + "sudo rm logs/output.nmon;"
+		cmd = cmd + "sudo ./nmon -F logs/output.nmon -s 5 -c 1200 -p;"
+		println("cmd = $cmd")
+		sshExec(
+			config,
+			instances,
+			{client -> },
+			{privateIp -> cmd },300
+		)
+	}
+}
+
+task ("killNMonOnAllInstances") {
+	def instances = getAllPublicIpsForInstances(config);
+	doLast {
+		def cmd = "";
+		cmd = "sudo killall -9 nmon;"
+		println("cmd = $cmd")
+		sshExec(
+			config,
+			instances,
+			{client -> },
+			{privateIp -> cmd },300
+		)
+	}
+}
+
+task ("collectLogFiles") {
+	def instances = getAllPublicIpsForInstances(config);
+	doLast {
+		def cmd = "";
+		cmd = cmd + "sudo rm -rf /opt/acmeair-logs;"
+		cmd = cmd + "export LOG_HOST_IP=`hostname -I | sed 's/ *\$//g'`;"
+		cmd = cmd + "sudo mkdir -p /opt/acmeair-logs/\$LOG_HOST_IP;"
+		cmd = cmd + "sudo mkdir /opt/acmeair-logs/\$LOG_HOST_IP/jmeter;"
+		cmd = cmd + "sudo cp /opt/acmeair-netflix/acmeair-driver/src/main/scripts/*1.* /opt/acmeair-logs/\$LOG_HOST_IP/jmeter/.;"
+		cmd = cmd + "sudo mkdir /opt/acmeair-logs/\$LOG_HOST_IP/nmon;"
+		cmd = cmd + "sudo cp /opt/nmon/logs/* /opt/acmeair-logs/\$LOG_HOST_IP/nmon/.;"
+		cmd = cmd + "sudo mkdir /opt/acmeair-logs/\$LOG_HOST_IP/tomcat;"
+		cmd = cmd + "sudo cp /opt/nmon/logs/* /opt/acmeair-logs/\$LOG_HOST_IP/nmon/.;"
+		cmd = cmd + "sudo mkdir /opt/acmeair-logs/\$LOG_HOST_IP/wlp;"
+		cmd = cmd + "sudo cp /opt/wlp/usr/servers/server1/logs/* /opt/acmeair-logs/\$LOG_HOST_IP/wlp/.;"
+		cmd = cmd + "cd /opt/acmeair-logs;"
+		cmd = cmd + "sudo zip -r logs.zip \$LOG_HOST_IP/*;"
+		cmd = cmd + "sudo chmod 644 logs.zip"
+		println("cmd = $cmd")
+		sshExec(
+			config,
+			instances,
+			{client -> },
+			{privateIp -> cmd },300
+		)
+	}
+}
+
+import java.util.concurrent.atomic.AtomicInteger
+def counter = new AtomicInteger()
+
+task ("downloadLogFiles") {
+	doLast {
+		def instances = getAllPublicIpsForInstances(config);
+		def logsAndReportsDir = new File("logsAndReports")
+		logsAndReportsDir.mkdirs();
+        if (logsAndReportsDir.isDirectory()) {           
+            ant.delete(dir:logsAndReportsDir.getPath() + "/archivedlogs")
+            ant.delete(dir:logsAndReportsDir.getPath() + "/logs")
+            new File(logsAndReportsDir.getPath() + "/archivedlogs").mkdir()
+            new File(logsAndReportsDir.getPath() + "/logs").mkdir()
+        }		
+		counter.getAndSet(0)
+		
+		sshSCP(config,
+				instances,
+				{client -> client.newSCPFileTransfer().download("/opt/acmeair-logs/logs.zip",logsAndReportsDir.getPath() + "/archivedlogs/"+counter.incrementAndGet().toString() +".zip");}, 60)
+				ant.unzip(dest: logsAndReportsDir.getPath() + '/logs/') {
+					fileset(dir: logsAndReportsDir.getPath() + '/archivedlogs') {
+						include(name: '**.zip')
+				}
+		}
+		
+	}
+}
+
+task ("organizeLogFilesByComponent") {
+	doLast {
+		def orgLogsDir = "logsAndReports/logs"
+		def newLogsDir = "logsAndReports/organizedLogs"
+		config.cloud.hard_coded_privateip_list_cluster_driver.each {
+			def fromDir = "$orgLogsDir/$it"
+			def intoDir = "$newLogsDir/jmeters/$it"
+			copy {
+				from fromDir
+				into intoDir
+			}
+		}
+		config.cloud.hard_coded_privateip_list_cluster_webapp.each {
+			def fromDir = "$orgLogsDir/$it"
+			def intoDir = "$newLogsDir/wlps/$it"
+			copy {
+				from fromDir
+				into intoDir
+			}
+		}
+		config.cloud.hard_coded_privateip_list_cluster_auth_service.each {
+			def fromDir = "$orgLogsDir/$it"
+			def intoDir = "$newLogsDir/wlps/$it"
+			copy {
+				from fromDir
+				into intoDir
+			}
+		}
+		config.cloud.hard_coded_privateip_list_cluster_wxs_container.each {
+			def fromDir = "$orgLogsDir/$it"
+			def intoDir = "$newLogsDir/containers/$it"
+			copy {
+				from fromDir
+				into intoDir
+			}
+		}
+	}
+}

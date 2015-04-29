@@ -1,0 +1,25 @@
+<server description="server">
+
+	<!-- Enable features -->
+	<featureManager>
+		<feature>servlet-3.0</feature>
+		<feature>jndi-1.0</feature>
+		<feature>eXtremeScale.client-1.1</feature>
+	</featureManager>
+
+	<jndiEntry jndiName="com/acmeair/repository/type" value="wxs"/>
+
+	<httpEndpoint id="defaultHttpEndpoint"
+		host="*"
+		httpPort="8080"
+		httpsPort="8443">
+		<httpOptions maxKeepAliveRequests="-1" />
+	</httpEndpoint>
+
+
+	<application type="war" id="acmeair-auth-service" name="acmeair-auth-service" context-root="/" location="/opt/wlp/usr/servers/server1/acmeair-auth-service-wlp-0.1.0-SNAPSHOT.war" autoStart="true"/>
+
+	<executor name="LargeThreadPool" id="default" coreThreads="100" maxThreads="200" keepAlive="360s" stealPolicy="STRICT" rejectedWorkPolicy="CALLER_RUNS" />    
+
+	<webContainer deferServletLoad="false"/>
+</server>

@@ -1,0 +1,2 @@
+-Darchaius.deployment.applicationId=acmeair-auth-service
+-Darchaius.deployment.environment=dev

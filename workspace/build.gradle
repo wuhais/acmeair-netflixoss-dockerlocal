@@ -1,0 +1,306 @@
+buildscript {
+    repositories { mavenCentral() }
+}
+
+def M2_REPO = System.getenv("M2_REPO")
+allprojects {
+    repositories {
+		mavenCentral()
+		maven {
+			url "$M2_REPO"
+		}
+	}
+}
+
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	
+    group = "com.acmeair.${rootProject.name}"
+    version = rootProject.version
+    sourceCompatibility = 1.6
+    
+    dependencies {
+        compile 'com.netflix.hystrix:hystrix-core:1.3.0'
+        compile 'com.netflix.ribbon:ribbon-core:0.2.0'
+        compile 'com.netflix.ribbon:ribbon-eureka:0.2.0'
+        compile 'com.netflix.ribbon:ribbon-httpclient:0.2.0'
+        compile 'com.netflix.karyon:karyon-core:1.0.19'
+        compile 'javax:javaee-web-api:6.0'
+    }
+}	
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.6'
+}
+
+project(':acmeair-common') {
+	dependencies {
+		compile 'com.ibm.websphere.objectgrid:objectgrid:8.6.0.2'
+	}
+}
+
+project(':acmeair-services') {
+	dependencies {
+		compile project(':acmeair-common')
+		compile 'org.springframework:spring-context:3.1.2.RELEASE'
+		testCompile 'cglib:cglib:2.2.2'
+	}
+}
+
+project(':acmeair-services-wxs') {
+	dependencies {
+		compile project(':acmeair-common')
+		compile project(':acmeair-services')
+		compile 'com.ibm.websphere.objectgrid:objectgrid:8.6.0.2'
+		compile 'org.springframework:spring-tx:3.1.2.RELEASE'
+        compile 'junit:junit:3.8.1'
+		//compile 'org.testng:testng:6.4'
+	}
+}
+
+project(':acmeair-webapp') {
+
+	dependencies {
+		compile project(':acmeair-common')
+		compile project(':acmeair-services')
+		compile project(':acmeair-services-wxs')
+		compile 'commons-io:commons-io:2.4'
+		compile 'org.springframework:spring-context:3.1.2.RELEASE'
+		
+		runtime 'org.springframework:spring-web:3.1.2.RELEASE'
+		runtime 'cglib:cglib:2.2.2'
+		runtime 'org.aspectj:aspectjrt:1.6.8'
+		runtime 'org.aspectj:aspectjweaver:1.6.8'
+		runtime 'com.google.inject.extensions:guice-servlet:3.0'
+		runtime 'com.google.inject:guice:3.0'
+		runtime 'com.netflix.karyon:karyon-server:0.1.2'
+		runtime 'com.netflix.karyon:karyon-admin-web:1.0.19'
+		runtime 'com.netflix.karyon:karyon-extensions:1.0.19'
+		// netflix uses slf4j 
+		runtime 'org.slf4j:slf4j-api:1.7.2'
+		// spring uses jcl bridge to slf4j
+		runtime 'org.slf4j:jcl-over-slf4j:1.7.2'
+		// use log4j under slf4j
+		runtime 'org.slf4j:slf4j-log4j12:1.7.2'
+		runtime 'com.sun.jersey:jersey-server:1.17.1'
+        runtime 'com.sun.jersey:jersey-core:1.17.1'
+        runtime 'com.sun.jersey:jersey-bundle:1.17.1'
+        runtime 'com.sun.jersey:jersey-json:1.17.1'
+        runtime 'com.sun.jersey.contribs:jersey-guice:1.13'
+		runtime 'com.netflix.hystrix:hystrix-metrics-event-stream:1.3.0'
+	}
+}
+
+project(':acmeair-webapp-wlp') {
+	apply plugin: 'war'
+	
+	dependencies {
+		runtime project(':acmeair-webapp')
+
+		// skip this dependency from spring as we're using jcl over slf4j
+		providedRuntime 'commons-logging:commons-logging:1.1.1'
+		// skip the JEE components that this app server provides
+		providedRuntime 'javax:javaee-web-api:6.0'   
+		providedRuntime 'javax.servlet:servlet-api:2.5'
+		providedRuntime 'org.eclipse.jetty.orbit:javax.servlet:2.5.0.v201103041518'
+        // Using the 8.5.5.5 WLP + WXS Feature and 8.6.0.2 WXS means this is provided by runtime
+		providedRuntime 'com.ibm.websphere.objectgrid:objectgrid:8.6.0.2'
+		// skip these as we'll include it in the war patched
+		providedRuntime 'com.netflix.governator:governator:1.1.1@jar'
+		// providedRuntime 'com.netflix.eureka:eureka-client:1.1.73@jar' // enable this to work in SoftLayer changes
+	}
+	
+	// FileTree cpTree = fileTree('patchGovernator/patched') + fileTree('patchEureka/patched') // enable this to work in SoftLayer changes
+	FileTree cpTree = fileTree('patchGovernator/patched')
+	war {
+		from '../acmeair-webapp/src/main/webapp'
+		classpath {
+			cpTree
+		}
+	}
+}
+
+project(':acmeair-webapp-tc7') {
+	apply plugin: 'war'
+
+	dependencies {
+		runtime project(':acmeair-webapp')
+
+		// skip this dependency from spring as we're using jcl over slf4j
+		providedRuntime 'commons-logging:commons-logging:1.1.1'
+		// skip the JEE components that this app server provides
+		providedRuntime 'javax:javaee-web-api:6.0'
+		providedRuntime 'javax.servlet:servlet-api:2.5'
+		providedRuntime 'org.eclipse.jetty.orbit:javax.servlet:2.5.0.v201103041518'
+	}
+	
+	war {
+		from '../acmeair-webapp/src/main/webapp'
+	}
+}
+
+project(':acmeair-auth-service') {
+	dependencies {
+		compile project(':acmeair-common')
+		compile project(':acmeair-services')
+		compile project(':acmeair-services-wxs')
+		compile 'org.springframework:spring-context:3.1.2.RELEASE'
+
+		runtime 'org.springframework:spring-web:3.1.2.RELEASE'
+		runtime 'cglib:cglib:2.2.2'
+		runtime 'org.aspectj:aspectjrt:1.6.8'
+		runtime 'org.aspectj:aspectjweaver:1.6.8'
+		runtime 'com.google.inject.extensions:guice-servlet:3.0'
+		runtime 'com.google.inject:guice:3.0'
+		runtime 'com.netflix.karyon:karyon-server:0.1.2'
+		runtime 'com.netflix.karyon:karyon-admin-web:1.0.19'
+		runtime 'com.netflix.karyon:karyon-extensions:1.0.19'
+		// netflix uses slf4j 
+		runtime 'org.slf4j:slf4j-api:1.7.2'
+		// spring uses jcl bridge to slf4j
+		runtime 'org.slf4j:jcl-over-slf4j:1.7.2'
+		// use log4j under slf4j
+		runtime 'org.slf4j:slf4j-log4j12:1.7.2'
+		runtime 'com.sun.jersey:jersey-server:1.17.1'
+        runtime 'com.sun.jersey:jersey-core:1.17.1'
+        runtime 'com.sun.jersey:jersey-bundle:1.17.1'
+        runtime 'com.sun.jersey:jersey-json:1.17.1'
+        runtime 'com.sun.jersey.contribs:jersey-guice:1.13'
+	}
+}
+
+project(':acmeair-auth-service-wlp') {
+	apply plugin: 'war'
+
+	dependencies {
+		runtime project(':acmeair-auth-service')
+
+		// skip this dependency from spring as we're using jcl over slf4j
+		providedRuntime 'commons-logging:commons-logging:1.1.1'
+		// skip the JEE components that this app server provides
+		providedRuntime 'javax:javaee-web-api:6.0'   
+		providedRuntime 'javax.servlet:servlet-api:2.5'
+		providedRuntime 'org.eclipse.jetty.orbit:javax.servlet:2.5.0.v201103041518'
+        // Using the 8.5.5.5 WLP + WXS Feature and 8.6.0.2 WXS means this is provided by runtime
+		providedRuntime 'com.ibm.websphere.objectgrid:objectgrid:8.6.0.2'
+		// skip these as we'll include it in the war patched
+		providedRuntime 'com.netflix.governator:governator:1.1.1@jar'
+		// providedRuntime 'com.netflix.eureka:eureka-client:1.1.73@jar' // enable this to work in SoftLayer changes
+	}
+	
+	// FileTree cpTree = fileTree('../acmeair-webapp-wlp/patchGovernator/patched') + fileTree('../acmeair-webapp-wlp/patchEureka/patched') // enable this to work in SoftLayer changes
+	FileTree cpTree = fileTree('../acmeair-webapp-wlp/patchGovernator/patched')
+	war {
+		from '../acmeair-auth-service/src/main/webapp'
+		classpath {
+			cpTree
+		}
+	}
+}
+
+project(':acmeair-auth-service-tc7') {
+	apply plugin: 'war'
+
+	dependencies {
+		runtime project(':acmeair-auth-service')
+		
+		// skip this dependency from spring as we're using jcl over slf4j
+		providedRuntime 'commons-logging:commons-logging:1.1.1'
+		// skip the JEE components that this app server provides
+		providedRuntime 'javax:javaee-web-api:6.0'
+		providedRuntime 'javax.servlet:servlet-api:2.5'
+		providedRuntime 'org.eclipse.jetty.orbit:javax.servlet:2.5.0.v201103041518'
+	}
+	
+	war {
+		from '../acmeair-auth-service/src/main/webapp'
+	}
+}
+
+project(':acmeair-loader') {
+	apply plugin: 'application'
+	mainClassName = 'com.acmeair.loader.Loader'
+	
+	dependencies {
+		compile project(':acmeair-common')
+		compile project(':acmeair-services')
+		compile project(':acmeair-services-wxs')
+		compile 'com.ibm.websphere.objectgrid:objectgrid:8.6.0.2'
+		compile 'org.springframework:spring-context:3.1.2.RELEASE'
+	}
+}
+
+project(':acmeair-driver') {
+	dependencies {
+		compile 'com.googlecode.json-simple:json-simple:1.1.1'
+		compile 'org.apache.jmeter:ApacheJMeter_core:2.7'
+	}
+}
+
+/*
+project(':acmeair-reporter') {
+	apply plugin: 'application'
+	mainClassName = 'com.acmeair.reporter.html.HtmlGenerator'
+	run {
+		args = ['../acmeair-driver-control/logsAndReports/organizedLogs']
+		maxHeapSize "3000m"
+	}
+	dependencies {
+		compile 'com.googlecode.charts4j:charts4j:1.3'
+		compile 'commons-io:commons-io:2.4'
+		compile 'org.freemarker:freemarker:2.3.19'
+	}
+}
+*/
+
+task acmeairNetflixZip(type:Zip) {
+	from ('.')
+	include '**'
+	exclude '.metadata', '.gradle', 'acmeair-webapp', 'acmeair-auth-service'
+	into 'acmeair-netflix'
+	destinationDir new File('..')
+	archiveName 'acmeair-netflix-1.zip'
+}
+
+task patchGovernator {
+	doLast {
+		def patchedJar = 'acmeair-webapp-wlp/patchGovernator/patched/governator-1.1.1.jar'
+		println("patching governator jar ($origGovFile) to jar ($patchedJar)")
+		new File('acmeair-webapp-wlp/patchGovernator').mkdir()
+		new File('acmeair-webapp-wlp/patchGovernator/governator-1.1.1.jar.expand').mkdir()
+		new File('acmeair-webapp-wlp/patchGovernator/patched').mkdir()
+		// would be nice to find a way to get this from maven instead of passing in as arg
+		// /Users/xx/.gradle/caches/artifacts-xx/filestore/com.netflix.governator/governator/1.1.1/jar/6fdee1749430e0f3780dda5e0a244c0ca85b5392/governator-1.1.1.jar
+		ant.copy(file : "$origGovFile", tofile : 'acmeair-webapp-wlp/patchGovernator/governator-1.1.1.jar.org', overwrite:"true")
+		ant.unzip(src : 'acmeair-webapp-wlp/patchGovernator/governator-1.1.1.jar.org', dest : 'acmeair-webapp-wlp/patchGovernator/governator-1.1.1.jar.expand')
+		ant.copy(file : 'acmeair-webapp-wlp/patchGovernator/com/netflix/governator/lifecycle/ClasspathScanner.class', todir : 'acmeair-webapp-wlp/patchGovernator/governator-1.1.1.jar.expand/com/netflix/governator/lifecycle', overwrite:"true")
+		ant.copy(file : 'acmeair-webapp-wlp/patchGovernator/com/netflix/governator/lifecycle/ClasspathScanner.java', todir : 'acmeair-webapp-wlp/patchGovernator/governator-1.1.1.jar.expand/com/netflix/governator/lifecycle', overwrite:"true")
+		ant.zip(destfile : "$patchedJar", basedir : 'acmeair-webapp-wlp/patchGovernator/governator-1.1.1.jar.expand')
+	}
+}
+
+task patchEureka {
+	doLast {
+		def patchedJar = 'acmeair-webapp-wlp/patchEureka/patched/eureka-1.1.73.jar'
+		println("patching eureka jar ($origEurFile) to jar ($patchedJar)")
+		new File('acmeair-webapp-wlp/patchEureka').mkdir()
+		new File('acmeair-webapp-wlp/patchEureka/eureka-1.1.73.jar.expand').mkdir()
+		new File('acmeair-webapp-wlp/patchEureka/patched').mkdir()
+		// would be nice to find a way to get this from maven instead of passing in as arg
+		// /Users/xx/.gradle/caches/artifacts-24/filestore/com.netflix.eureka/eureka-client/1.1.73/jar/8b88907d2f6f5a9d97a69092977a4fcde5f66b63/eureka-client-1.1.73.jar
+		ant.copy(file : "$origEurFile", tofile : 'acmeair-webapp-wlp/patchEureka/eureka-1.1.73.jar.org', overwrite:"true")
+		ant.unzip(src : 'acmeair-webapp-wlp/patchEureka/eureka-1.1.73.jar.org', dest : 'acmeair-webapp-wlp/patchEureka/eureka-1.1.73.jar.expand')
+		ant.copy(todir : 'acmeair-webapp-wlp/patchEureka/eureka-1.1.73.jar.expand/com/netflix/discovery', overwrite:"true") {
+			fileset(dir : 'acmeair-webapp-wlp/patchEureka/com/netflix/discovery') {
+				include(name : 'DiscoveryClient*.class')
+			}
+			fileset(dir : 'acmeair-webapp-wlp/patchEureka/com/netflix/appinfo') {
+				include(name : 'AbstractInstanceConfig*.class')
+			}
+		} 
+		ant.copy(file : 'acmeair-webapp-wlp/patchEureka/com/netflix/discovery/DiscoveryClient.java', todir : 'acmeair-webapp-wlp/patchEureka/eureka-1.1.73.jar.expand/com/netflix/discovery', overwrite:"true")
+		ant.zip(destfile : "$patchedJar", basedir : 'acmeair-webapp-wlp/patchEureka/eureka-1.1.73.jar.expand')
+	}
+}
+
