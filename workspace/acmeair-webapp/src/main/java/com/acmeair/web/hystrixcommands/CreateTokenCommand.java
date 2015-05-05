@@ -20,17 +20,15 @@ import java.io.PrintWriter;
 import java.net.URI;
 
 import com.netflix.hystrix.*;
-import com.netflix.niws.client.http.HttpClientRequest;
-import com.netflix.niws.client.http.HttpClientRequest.Verb;
-import com.netflix.niws.client.http.HttpClientResponse;
+import com.netflix.client.http.HttpRequest;
+import com.netflix.client.http.HttpRequest.Verb;
+import com.netflix.client.http.HttpResponse;
 import com.netflix.niws.client.http.RestClient;
 import com.netflix.client.ClientFactory;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.common.base.Charsets;
 import com.acmeair.entities.*;
 
 import org.codehaus.jackson.map.*;
@@ -53,13 +51,16 @@ public class CreateTokenCommand extends HystrixCommand<CustomerSession> {
 	protected CustomerSession run() throws Exception {
 		String responseString = null;
 		try {
+			URI uri = new URI(CommandConstants.ACME_AIR_AUTH_SERVICE_CONTEXT_AND_REST_PATH + "/authtoken/byuserid/" + userid);
+			
 			RestClient client = (RestClient) ClientFactory.getNamedClient(CommandConstants.ACME_AIR_AUTH_SERVICE_NAMED_CLIENT);
 	
-			HttpClientRequest request = HttpClientRequest.newBuilder().setVerb(Verb.POST).setUri(new URI(CommandConstants.ACME_AIR_AUTH_SERVICE_CONTEXT_AND_REST_PATH + "/authtoken/byuserid/" + userid)).build();
-			HttpClientResponse response = client.executeWithLoadBalancer(request);
+			HttpRequest request = HttpRequest.newBuilder().uri(uri).verb(Verb.POST).build();
+			HttpResponse response = client.executeWithLoadBalancer(request);
 			
-			responseString = IOUtils.toString(response.getRawEntity(), Charsets.UTF_8);
+			responseString = response.getEntity(String.class);
 			log.debug("responseString = " + responseString);
+			
 			ObjectMapper mapper = new ObjectMapper();
 			CustomerSession cs = mapper.readValue(responseString, CustomerSession.class);
 			return cs;

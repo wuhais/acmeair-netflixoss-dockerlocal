@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 import com.acmeair.entities.*;
 import com.acmeair.service.*;
-import com.acmeair.wxs.utils.TransactionService;
+//import com.acmeair.wxs.utils.TransactionService;
 
 import javax.ws.rs.core.Context;
 
@@ -35,22 +35,22 @@ public class AuthTokenREST {
 	
 	@Context 
 	private HttpServletRequest request;
-	private TransactionService transactionService = null; 
-	private boolean initializedTXService = false;
+//	private TransactionService transactionService = null; 
+//	private boolean initializedTXService = false;
 	
-	private TransactionService getTxService() {
-		if (!this.initializedTXService) {
-			this.initializedTXService = true;
-			transactionService = ServiceLocator.getService(TransactionService.class);
-		}
-		return transactionService;
-	}
+//	private TransactionService getTxService() {
+//		if (!this.initializedTXService) {
+//			this.initializedTXService = true;
+//			transactionService = ServiceLocator.getService(TransactionService.class);
+//		}
+//		return transactionService;
+//	}
 
 	@POST
 	@Path("/byuserid/{userid}")
 	@Produces("application/json")
 	public /* CustomerSession */ Response createToken(@PathParam("userid") String userid) {
-		setupTransaction();
+//		setupTransaction();
 		CustomerSession cs = customerService.createSession(userid);
 		return Response.ok(cs).build();
 	}
@@ -59,7 +59,7 @@ public class AuthTokenREST {
 	@Path("{tokenid}")
 	@Produces("application/json")
 	public Response validateToken(@PathParam("tokenid") String tokenid) {
-		setupTransaction();
+//		setupTransaction();
 		CustomerSession cs = customerService.validateSession(tokenid);
 		if (cs == null) {
 			throw new WebApplicationException(404);
@@ -73,21 +73,21 @@ public class AuthTokenREST {
 	@Path("{tokenid}")
 	@Produces("application/json")
 	public Response invalidateToken(@PathParam("tokenid") String tokenid) {
-		setupTransaction();
+//		setupTransaction();
 		customerService.invalidateSession(tokenid);
 		return Response.ok().build();
 	}
 	
-	private void setupTransaction() {
-		// The following code is to ensure that OG is always set on the thread
-		try {
-			TransactionService txService = getTxService();
-			if (txService != null) {
-				txService.prepareForTransaction();
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	private void setupTransaction() {
+//		// The following code is to ensure that OG is always set on the thread
+//		try {
+//			TransactionService txService = getTxService();
+//			if (txService != null) {
+//				txService.prepareForTransaction();
+//			}
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 }

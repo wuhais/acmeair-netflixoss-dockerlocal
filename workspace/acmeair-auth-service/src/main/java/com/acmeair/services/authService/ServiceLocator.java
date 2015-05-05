@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.acmeair.services.authService.WXSDirectAppConfig;
+import com.acmeair.services.authService.CassandraAstyanaxConfig;
 
 public class ServiceLocator {
 
@@ -86,7 +86,7 @@ public class ServiceLocator {
 		// TODO:  Later add back in other implementations
 		type = "wxsdirect";
 		logger.info("Using default repository :" + type);
-		ctx = new AnnotationConfigApplicationContext(WXSDirectAppConfig.class);
+		ctx = new AnnotationConfigApplicationContext(CassandraAstyanaxConfig.class);
 	}
 
 	public static <T> T getService(Class<T> clazz) {

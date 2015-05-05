@@ -38,5 +38,7 @@ public interface FlightService {
 			String airplaneTypeId);
 
 	public abstract void storeFlightSegment(FlightSegment flightSeg);
+	
+	public abstract void closeDatasource();
 
 }

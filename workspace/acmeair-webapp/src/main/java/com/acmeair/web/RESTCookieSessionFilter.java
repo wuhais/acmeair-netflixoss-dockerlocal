@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.acmeair.entities.CustomerSession;
 import com.acmeair.web.hystrixcommands.ValidateTokenCommand;
-import com.acmeair.wxs.utils.*;
+//import com.acmeair.wxs.utils.*;
 
 public class RESTCookieSessionFilter implements Filter {
 	private static final Log log = LogFactory.getLog(RESTCookieSessionFilter.class);
@@ -41,23 +41,23 @@ public class RESTCookieSessionFilter implements Filter {
 	private static final String LOGIN_PATH = "/rest/api/login";
 	private static final String LOGOUT_PATH = "/rest/api/login/logout";
 	
-	private TransactionService transactionService = null; 
-	private boolean initializedTXService = false;
+//	private TransactionService transactionService = null; 
+//	private boolean initializedTXService = false;
 	
 	@Override
 	public void destroy() {
 	}
 
-	private TransactionService getTxService()
-	{
-		if (!this.initializedTXService)
-		{
-			this.initializedTXService = true;
-			transactionService = ServiceLocator.getService(TransactionService.class);
-		}
-		
-		return transactionService;
-	}
+//	private TransactionService getTxService()
+//	{
+//		if (!this.initializedTXService)
+//		{
+//			this.initializedTXService = true;
+//			transactionService = ServiceLocator.getService(TransactionService.class);
+//		}
+//		
+//		return transactionService;
+//	}
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,	FilterChain chain) throws IOException, ServletException {
 		try {
@@ -66,14 +66,14 @@ public class RESTCookieSessionFilter implements Filter {
 		
 		String path = request.getContextPath() + request.getServletPath() + request.getPathInfo();
 		// The following code is to ensure that OG is always set on the thread
-		try{
-			TransactionService txService = getTxService();
-			if (txService!=null)
-				txService.prepareForTransaction();
-		}catch( Exception e)
-		{
-			e.printStackTrace();
-		}
+//		try{
+//			TransactionService txService = getTxService();
+//			if (txService!=null)
+//				txService.prepareForTransaction();
+//		}catch( Exception e)
+//		{
+//			e.printStackTrace();
+//		}
 		// could do .startsWith for now, but plan to move LOGOUT to its own REST interface eventually
 		if (path.endsWith(LOGIN_PATH) || path.endsWith(LOGOUT_PATH)) {
 			// if logging in, let the request flow

@@ -55,7 +55,7 @@ public class Loader {
     	System.setProperty("loader.numCustomers", numCustomers);
 
     	// TODO:  Later add back in other implementations
-		ctx = new AnnotationConfigApplicationContext(WXSDirectAppConfig.class);
+		ctx = new AnnotationConfigApplicationContext(CassandraAstyanaxConfig.class);
 		
 		FlightLoader flightLoader = ctx.getBean(FlightLoader.class);
 		CustomerLoader customerLoader = ctx.getBean(CustomerLoader.class);
@@ -67,6 +67,8 @@ public class Loader {
 			logger.info("Start loading " +  numCustomers + " customers");
 			customerLoader.loadCustomers(Long.parseLong(numCustomers));
 			long stop = System.currentTimeMillis();
+			// TODO: Needed in datastax based loader, if removed, remove from here too
+			flightLoader.closeDatasource();
 			logger.info("Finished loading in " + (stop - start)/1000.0 + " seconds");
 		}
 		catch (Exception e) {

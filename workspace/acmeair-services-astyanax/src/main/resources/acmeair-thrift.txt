@@ -1,0 +1,68 @@
+DROP KEYSPACE acmeair;
+
+CREATE KEYSPACE acmeair WITH
+placement_strategy = 'SimpleStrategy'
+AND strategy_options = {replication_factor:2};
+
+USE acmeair;
+
+create column family customer
+  with key_validation_class = UTF8Type
+  and comparator = UTF8Type
+  and column_metadata = [
+    {column_name: password, validation_class: UTF8Type},
+    {column_name: customer_status, validation_class: UTF8Type},
+    {column_name: total_miles, validation_class: IntegerType}
+    {column_name: miles_ytd, validation_class: IntegerType}
+    {column_name: addr_street1, validation_class: UTF8Type},
+    {column_name: addr_street2, validation_class: UTF8Type},
+    {column_name: addr_city, validation_class: UTF8Type},
+    {column_name: addr_state_province, validation_class: UTF8Type},
+    {column_name: addr_country, validation_class: UTF8Type},
+    {column_name: addr_postal_code, validation_class: UTF8Type},
+    {column_name: phone_number, validation_class: UTF8Type},
+    {column_name: phone_number_type, validation_class: UTF8Type},
+  ];
+
+create column family airport_code_mapping
+  with key_validation_class = UTF8Type
+  and comparator = UTF8Type
+  and column_metadata = [
+    {column_name: airport_name, validation_class: UTF8Type},
+  ];
+  
+create column family flight_segment
+-- origin_port, dest_port
+  with key_validation_class = 'UTF8Type'
+-- origin_port (duplicate), dest_port
+  and comparator = 'CompositeType(UTF8Type, UTF8Type)'
+  and column_metadata = [
+    {column_name: miles, validation_class: IntegerType},
+  ];
+
+create column family flight
+  with key_validation_class = UTF8Type
+  and comparator = UTF8Type
+  and column_metadata = [
+    {column_name: flight_segment_id, validation_class: UTF8Type},
+    {column_name: scheduled_departure_time, validation_class: DateType},
+    {column_name: scheduled_arrival_time, validation_class: DateType},
+-- TODO:  why doesn't putColumn support BigDecimal
+    {column_name: first_class_base_cost, validation_class: DecimalType},
+-- TODO:  why doesn't putColumn support BigDecimal
+    {column_name: economy_class_base_cost, validation_class: DecimalType},
+    {column_name: num_first_class_seats, validation_class: IntegerType},
+    {column_name: num_economy_class_seats, validation_class: IntegerType},
+    {column_name: airplane_type_id, validation_class: UTF8Type},
+-- TODO: Allows clustering columns??
+-- FlightPK = flight_id + flight_segment_id
+  ];
+
+create column family customer_session
+  with key_validation_class = UTF8Type
+  and comparator = UTF8Type
+  and column_metadata = [
+    {column_name: customer_id, validation_class: UTF8Type},
+    {column_name: last_accessed_time, validation_class: DateType},
+    {column_name: timeout_time, validation_class: DateType},
+  ];

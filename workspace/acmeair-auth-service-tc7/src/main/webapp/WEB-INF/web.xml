@@ -12,9 +12,7 @@
 		instead of the default XmlWebApplicationContext -->
 	<context-param>
 		<param-name>contextClass</param-name>
-		<param-value>
-          org.springframework.web.context.support.AnnotationConfigWebApplicationContext
-      </param-value>
+		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
 	</context-param>
 
 	<!-- Configuration locations must consist of one or more comma- or space-delimited 
@@ -22,7 +20,7 @@
 		be specified for component-scanning -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>com.acmeair.services.authService.WXSDirectAppConfig</param-value>
+		<param-value>com.acmeair.services.authService.CassandraAstyanaxConfig</param-value>
 	</context-param>
 
 	<!-- Bootstrap the root application context as usual using ContextLoaderListener -->
@@ -61,6 +59,6 @@
     <filter-mapping>
         <filter-name>guiceFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>	
+    </filter-mapping>
 
 </web-app>

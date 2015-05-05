@@ -22,7 +22,7 @@
 		be specified for component-scanning -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>com.acmeair.web.config.WXSDirectAppConfig</param-value>
+		<param-value>com.acmeair.web.config.CassandraAstyanaxConfig</param-value>
 	</context-param>
 
 	<filter>
@@ -51,14 +51,24 @@
     </servlet-mapping>	
 	
 	<servlet>
-		<servlet-name>javax.ws.rs.core.Application</servlet-name>
-	</servlet>
-	
+  		<servlet-name>jersey-servlet</servlet-name>
+  		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+  		<init-param>
+  			<param-name>com.sun.jersey.config.property.packages</param-name>
+  			<param-value>com.acmeair.web</param-value>
+  		</init-param>
+		<init-param>
+  			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+  			<param-value>true</param-value>
+  		</init-param>
+  		<load-on-startup>1</load-on-startup>
+    </servlet>
+    
 	<servlet-mapping>
-		<servlet-name>javax.ws.rs.core.Application</servlet-name>
+		<servlet-name>jersey-servlet</servlet-name>
 		<url-pattern>/rest/api/*</url-pattern>
 	</servlet-mapping>
-	
+
     <listener>
         <listener-class>com.netflix.karyon.server.guice.KaryonGuiceContextListener</listener-class>
     </listener>
@@ -71,5 +81,5 @@
     <filter-mapping>
         <filter-name>guiceFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>	
+    </filter-mapping>
 </web-app>
