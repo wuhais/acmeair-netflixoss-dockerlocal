@@ -16,11 +16,11 @@
 FROM acmeair/tomcat
 
 RUN cd /opt/tomcat/webapps &&\
-  mkdir ROOT &&\
-  cd ROOT &&\
-  wget -qO app.war https://acmeair.ci.cloudbees.com/job/acmeair-netflix-astyanax/lastSuccessfulBuild/artifact/acmeair-webapp-tc7/build/libs/acmeair-webapp-tc7-0.1.0-SNAPSHOT.war &&\
-  jar xf app.war &&\
-  rm app.war
+  mkdir ROOT 
+ADD acmeair-webapp-tc7-0.1.0-SNAPSHOT.war /opt/tomcat/webapps/ROOT/app.war
+  
+RUN jar xf /opt/tomcat/webapps/ROOT/app.war &&\
+  rm /opt/tomcat/webapps/ROOT/app.war
 
 ADD ACMEAIR_WEBAPP-docker.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/ACMEAIR_WEBAPP-docker.properties
 ADD config.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/config.properties
