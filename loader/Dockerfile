@@ -15,16 +15,16 @@
 ################################################################################
 FROM acmeair/cassandra
 
-RUN wget -qO /opt/app.zip \
-    https://acmeair.ci.cloudbees.com/job/acmeair-netflix-astyanax/lastSuccessfulBuild/artifact/acmeair-loader/build/distributions/acmeair-loader-0.1.0-SNAPSHOT.zip &&\
-  cd /opt &&\
+Add acmeair-loader-0.1.0-SNAPSHOT.zip /opt/app.zip
+
+RUN cd /opt &&\
   jar xf app.zip &&\
   rm app.zip &&\
   mv acmeair-loader-* acmeair-loader &&\
   cd acmeair-loader/bin &&\
-  chmod +x acmeair-loader &&\
-  wget -q https://acmeair.ci.cloudbees.com/job/acmeair-netflix-astyanax/lastSuccessfulBuild/artifact/acmeair-services-astyanax/src/main/resources/acmeair-cql.txt &&\
-  sed -i 's/DROP/\/\/DROP/' acmeair-cql.txt
+  chmod +x acmeair-loader 
+Add acmeair-cql.txt /opt/acmeair-loader/bin/acmeair-cql.txt 
+RUN sed -i 's/DROP/\/\/DROP/' /opt/acmeair-loader/bin/acmeair-cql.txt
 
 ENV JAVA_OPTS -Dcom.acmeair.cassandra.contactpoint=cassandra1.cassandra.local.flyacmeair.net
 

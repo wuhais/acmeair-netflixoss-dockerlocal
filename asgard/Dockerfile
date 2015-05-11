@@ -27,12 +27,11 @@ RUN sudo -u mongodb /usr/bin/mongod -f /etc/mongodb.conf --fork &&\
   sudo -u mongodb /usr/bin/mongod -f /etc/mongodb.conf --shutdown &&\
   rm /tmp/applications.js
 
-RUN cd /opt/tomcat/webapps &&\
-  mkdir ROOT &&\
-  cd ROOT &&\
-  wget -qO app.war https://acmeair.ci.cloudbees.com/job/asgard-etiport/lastSuccessfulBuild/artifact/target/asgard.war &&\
-  jar xf app.war &&\
-  rm app.war
+RUN mkdir /opt/tomcat/webapps/ROOT
+ADD asgard.war /opt/tomcat/webapps/ROOT/
+RUN cd /opt/tomcat/webapps/ROOT/ &&\
+  jar xf asgard.war &&\
+  rm asgard.war
 
 ADD mongodb.conf /etc/supervisor/conf.d/mongodb.conf
 

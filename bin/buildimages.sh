@@ -36,6 +36,9 @@ fi
 cp id_rsa.pub ../base
 
 cd ..
+cd bin
+./addjarwar.sh
+cd ..
 
 echo "Building acmeair/pwgen"
 $docker_cmd build -t acmeair/pwgen pwgen

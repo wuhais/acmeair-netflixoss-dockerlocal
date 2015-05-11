@@ -17,11 +17,12 @@ FROM acmeair/liberty
 
 RUN cd /opt/ibm/wlp/usr/servers/defaultServer &&\
   mkdir -p apps/webapp.war &&\
-  cd apps/webapp.war &&\
-  wget -qO app.war https://acmeair.ci.cloudbees.com/job/acmeair-netflix-astyanax/lastSuccessfulBuild/artifact/acmeair-webapp-tc7/build/libs/acmeair-webapp-tc7-0.1.0-SNAPSHOT.war &&\
-  jar xf app.war &&\
-  rm app.war
+  cd apps/webapp.war 
 
+ADD acmeair-webapp-tc7-0.1.0-SNAPSHOT.war /opt/ibm/wlp/usr/servers/defaultServer/apps/webapp.war/app.war
+
+RUN jar xf /opt/ibm/wlp/usr/servers/defaultServer/apps/webapp.war/app.war &&\
+  rm /opt/ibm/wlp/usr/servers/defaultServer/apps/webapp.war/app.war
 ADD ACMEAIR_WEBAPP-docker.properties /opt/ibm/wlp/usr/servers/defaultServer/apps/webapp.war/WEB-INF/classes/ACMEAIR_WEBAPP-docker.properties
 ADD config.properties /opt/ibm/wlp/usr/servers/defaultServer/apps/webapp.war/WEB-INF/classes/config.properties
 

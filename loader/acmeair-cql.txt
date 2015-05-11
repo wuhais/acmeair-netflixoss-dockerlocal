@@ -1,0 +1,69 @@
+DROP KEYSPACE acmeair;
+
+CREATE KEYSPACE acmeair 
+  WITH REPLICATION = {'class' : 'SimpleStrategy',
+  'replication_factor': 3};
+
+USE acmeair;
+
+CREATE TABLE airport_code_mapping (
+  airport_code text PRIMARY KEY,
+  airport_name text,
+);
+
+CREATE TABLE flight_segment (
+// TODO: Consider moving to uuid since Java code is already doing uuid's
+  flight_segment_id text,
+  origin_port text,
+  dest_port text,
+  miles int,
+  PRIMARY KEY (origin_port, dest_port)
+);
+
+CREATE TABLE flight (
+  flight_id text,
+  flight_segment_id text,
+  scheduled_departure_time timestamp,
+  scheduled_arrival_time timestamp,
+  first_class_base_cost decimal,
+  economy_class_base_cost decimal,
+  num_first_class_seats int,
+  num_economy_class_seats int,
+  airplane_type_id text,
+  PRIMARY KEY (flight_segment_id, scheduled_departure_time)
+);
+
+CREATE INDEX flight_flight_id ON flight (flight_id);
+
+CREATE TABLE customer (
+  username text PRIMARY KEY,
+  password text,
+  customer_status text,
+  total_miles int,
+  miles_ytd int,
+  addr_street1 text,
+  addr_street2 text,
+  addr_city text,
+  addr_state_province text,
+  addr_country text,
+  addr_postal_code text,
+// TODO: consider moving to phone_numbers map<text, text>
+  phone_number text,
+  phone_number_type text
+);
+
+CREATE TABLE customer_session (
+  session_id text PRIMARY KEY,
+  customer_id text,
+  last_accessed_time timestamp,
+  timeout_time timestamp
+);
+
+CREATE TABLE booking (
+  customer_id text,
+  booking_id text,
+  flight_id text,
+  flight_segment_id text,
+  booking_date timestamp,
+  PRIMARY KEY (customer_id, booking_id)
+);
