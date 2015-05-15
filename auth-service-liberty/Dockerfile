@@ -20,6 +20,7 @@ ADD acmeair-auth-service-tc7-0.1.0-SNAPSHOT.war /opt/ibm/wlp/usr/servers/default
 RUN cd /opt/ibm/wlp/usr/servers/defaultServer/apps/auth-service.war/ &&\
   jar xf acmeair-auth-service-tc7-0.1.0-SNAPSHOT.war &&\
   rm *.war
+  
 
 ADD ACMEAIR_AUTH_SERVICE-docker.properties /opt/ibm/wlp/usr/servers/defaultServer/apps/auth-service.war/WEB-INF/classes/ACMEAIR_AUTH_SERVICE-docker.properties
 ADD config.properties /opt/ibm/wlp/usr/servers/defaultServer/apps/auth-service.war/WEB-INF/classes/config.properties

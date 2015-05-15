@@ -39,6 +39,10 @@ cd ..
 cd bin
 ./addjarwar.sh
 cd ..
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 echo "Building acmeair/pwgen"
 $docker_cmd build -t acmeair/pwgen pwgen
 echo "Building acmeair/base"

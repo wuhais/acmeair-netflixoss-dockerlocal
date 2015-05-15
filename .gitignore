@@ -7,4 +7,4 @@ microscaler-agent/agent.yml
 microscaler/Dockerfile
 microscaler/microscaler.yml
 tomcat/tomcat-users.xml
-
+acmeair-auth-service-tc7-0.1.0-SNAPSHOT.war

@@ -8,4 +8,3 @@
     <classloading useJarUrls="true"/>
     <webContainer deferServletLoad="false"/>
 </server>
-

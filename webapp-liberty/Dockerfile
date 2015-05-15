@@ -24,6 +24,10 @@ RUN cd /opt/ibm/wlp/usr/servers/defaultServer/apps/webapp.war/ &&\
   jar xf acmeair-webapp-tc7-0.1.0-SNAPSHOT.war &&\
   rm *.war
 
+ADD acmeair-webapp-tc7-0.1.0-SNAPSHOT.war /opt/ibm/wlp/usr/servers/defaultServer/apps/webapp.war/app.war
+
+RUN jar xf /opt/ibm/wlp/usr/servers/defaultServer/apps/webapp.war/app.war &&\
+  rm /opt/ibm/wlp/usr/servers/defaultServer/apps/webapp.war/app.war
 ADD ACMEAIR_WEBAPP-docker.properties /opt/ibm/wlp/usr/servers/defaultServer/apps/webapp.war/WEB-INF/classes/ACMEAIR_WEBAPP-docker.properties
 ADD config.properties /opt/ibm/wlp/usr/servers/defaultServer/apps/webapp.war/WEB-INF/classes/config.properties
 

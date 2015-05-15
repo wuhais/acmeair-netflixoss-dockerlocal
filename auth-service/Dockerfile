@@ -21,6 +21,8 @@ RUN cd /opt/tomcat/webapps/ROOT/ &&\
  jar xf acmeair-auth-service-tc7-0.1.0-SNAPSHOT.war &&\
  rm *.war
 
+RUN jar xf /opt/tomcat/webapps/ROOT/app.war &&\
+  rm /opt/tomcat/webapps/ROOT/app.war
 ADD ACMEAIR_AUTH_SERVICE-docker.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/ACMEAIR_AUTH_SERVICE-docker.properties
 ADD config.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/config.properties
 
