@@ -40,7 +40,10 @@ cd bin
 ./addjarwar.sh
 cd ..
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/master
 
 >>>>>>> origin/master
 echo "Building acmeair/pwgen"

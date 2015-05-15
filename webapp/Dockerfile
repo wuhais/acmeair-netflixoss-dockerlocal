@@ -15,6 +15,7 @@
 ################################################################################
 FROM acmeair/tomcat
 
+<<<<<<< HEAD
 RUN mkdir /opt/tomcat/webapps/ROOT 
 
 ADD acmeair-webapp-tc7-0.1.0-SNAPSHOT.war /opt/tomcat/webapps/ROOT/
@@ -22,6 +23,14 @@ ADD acmeair-webapp-tc7-0.1.0-SNAPSHOT.war /opt/tomcat/webapps/ROOT/
 RUN  cd /opt/tomcat/webapps/ROOT &&\
   jar xf acmeair-webapp-tc7-0.1.0-SNAPSHOT.war &&\
   rm acmeair-webapp-tc7-0.1.0-SNAPSHOT.war
+=======
+RUN cd /opt/tomcat/webapps &&\
+  mkdir ROOT 
+ADD acmeair-webapp-tc7-0.1.0-SNAPSHOT.war /opt/tomcat/webapps/ROOT/app.war
+  
+RUN jar xf /opt/tomcat/webapps/ROOT/app.war &&\
+  rm /opt/tomcat/webapps/ROOT/app.war
+>>>>>>> origin/master
 
 ADD ACMEAIR_WEBAPP-docker.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/ACMEAIR_WEBAPP-docker.properties
 ADD config.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/config.properties
