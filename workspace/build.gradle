@@ -19,10 +19,10 @@ subprojects {
     sourceCompatibility = 1.6
     
     dependencies {
-        compile 'com.netflix.hystrix:hystrix-core:1.3.16'
-        compile 'com.netflix.ribbon:ribbon-core:0.3.12'
-        compile 'com.netflix.ribbon:ribbon-httpclient:0.3.12'
-        compile 'com.netflix.karyon:karyon-core:1.0.22'
+        compile 'com.netflix.hystrix:hystrix-core:1.3.20'
+        compile 'com.netflix.ribbon:ribbon-core:0.3.13'
+        compile 'com.netflix.ribbon:ribbon-httpclient:0.3.13'
+        compile 'com.netflix.karyon:karyon-core:1.0.27'
         compile 'javax:javaee-web-api:6.0'
     }
 }	

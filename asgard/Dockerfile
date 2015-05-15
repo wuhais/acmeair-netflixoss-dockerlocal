@@ -33,7 +33,6 @@ RUN cd /opt/tomcat/webapps &&\
   wget -qO app.war https://acmeair.ci.cloudbees.com/job/asgard-etiport/lastSuccessfulBuild/artifact/target/asgard.war &&\
   jar xf app.war &&\
   rm app.war
-
 ADD mongodb.conf /etc/supervisor/conf.d/mongodb.conf
 
 ENV CATALINA_OPTS -XX:MaxPermSize=128m
