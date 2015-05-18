@@ -14,22 +14,13 @@
 # limitations under the License.
 ################################################################################
 FROM acmeair/tomcat
-<<<<<<< HEAD
 
 RUN mkdir /opt/tomcat/webapps/ROOT
 ADD acmeair-auth-service-tc7-0.1.0-SNAPSHOT.war /opt/tomcat/webapps/ROOT/
 RUN cd /opt/tomcat/webapps/ROOT/ &&\
  jar xf acmeair-auth-service-tc7-0.1.0-SNAPSHOT.war &&\
  rm *.war
-=======
-RUN cd /opt/tomcat/webapps &&\
-  mkdir ROOT 
 
-Add acmeair-auth-service-tc7-0.1.0-SNAPSHOT.war /opt/tomcat/webapps/ROOT/app.war
->>>>>>> origin/master
-
-RUN jar xf /opt/tomcat/webapps/ROOT/app.war &&\
-  rm /opt/tomcat/webapps/ROOT/app.war
 ADD ACMEAIR_AUTH_SERVICE-docker.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/ACMEAIR_AUTH_SERVICE-docker.properties
 ADD config.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/config.properties
 
@@ -37,3 +28,4 @@ ENV CATALINA_OPTS -Xmx48m
 ENV SERVICE_NAME auth-service
 
 CMD ["/usr/bin/supervisord", "-n"]
+
