@@ -5,7 +5,7 @@ bridge_name=docker0
 docker_port=2375
 
 # "wlp" for WAS Liberty profile or "tc" for Tomcat
-appserver=wlp
+appserver=tc
 
 if [ "$appserver" = "wlp" ]; then
   as_suffix=-liberty

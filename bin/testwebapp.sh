@@ -8,7 +8,7 @@ if [ -z "$webapp_addr" ]; then
   webapp_addr=$($docker_cmd ps | grep 'acmeair/webapp' | head -n 1 | cut -d' ' -f1 | xargs $docker_cmd inspect --format '{{.NetworkSettings.IPAddress}}')
 fi
 
-for i in `seq 0 1 10`
+for i in `seq 0 0`
 do
   curl -sL -w "%{http_code} %{url_effective}\\n" -o /dev/null -c cookie.txt --data "login=uid0@email.com&password=password" $webapp_addr/rest/api/login
   curl -sL -w "%{http_code} %{url_effective}\\n" -o /dev/null -b cookie.txt $webapp_addr/rest/api/customer/byid/uid0@email.com
