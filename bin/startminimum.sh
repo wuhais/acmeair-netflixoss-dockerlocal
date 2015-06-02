@@ -16,11 +16,11 @@
 # limitations under the License.
 ################################################################################
 
-echo "Starting Skydns and Skydock"
-./startdns.sh
-
 echo "Starting Cassandra"
 ./addcassandra.sh
+
+echo "Starting Skydns and Skydock"
+./startdns.sh
 
 echo "Waiting Cassandra"
 sleep 20

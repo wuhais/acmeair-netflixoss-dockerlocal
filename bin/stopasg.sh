@@ -8,6 +8,6 @@ ssh -i id_rsa root@$asgc_addr << EOF
 cd /usr/local/microscaler-cli/bin &&\
 ./ms login --target http://localhost:56785/asgcc/ --user user01 --key key &&\
 
-./ms stop-asg --asg-name acmeair_auth_service
+./ms stop-asg --asg-name auth
 ./ms stop-asg --asg-name acmeair_webapp
 EOF

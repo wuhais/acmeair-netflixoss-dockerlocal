@@ -41,6 +41,7 @@ do
     exit 1
   fi
   successDnsNum=`./testdns.sh |awk '{print $1 }'|wc -l`
+  echo $successDnsNum
   if [ $successDnsNum -eq 5 ]; then
     break;
   else
