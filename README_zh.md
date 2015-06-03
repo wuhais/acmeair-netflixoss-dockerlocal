@@ -1,14 +1,14 @@
 Acmeair-netflix-docker
 ======================
-These instructions are based on Docker 1.0.0 run on Ubuntu trusty boot2docker. [(Japanese)](README_ja.md) [(Chinese)](README_zh.md)
+本说明假定的运行环境为基于Ubuntu trusty boot2docker之上的Docker 1.0.0版。 
 
-## The topology
+## 系统拓扑图
 
 ![topology](images/topology.png)
 
-## Configurations
-### Enable remote API access of Docker daemon via TCP socket
-Change Docker daemon startup configuration (`/etc/default/docker`) like as bellow. On boot2docker, it is enabled by default.
+## 配置
+### 允许通过TCP套接字远程API访问Docker守护进程
+修改Docker守护进程的启动配置 (`/etc/default/docker`) 如下。在boot2docker上该选项是默认开启的。
 
 ```bash
 # Use DOCKER_OPTS to modify the daemon startup options.
@@ -16,22 +16,22 @@ Change Docker daemon startup configuration (`/etc/default/docker`) like as bello
 DOCKER_OPTS="-H tcp://0.0.0.0:2375 -H unix://var/run/docker.sock"
 ```
 
-### Docker client command
-If you need `sudo` with `docker` command, change `docker_cmd` in `bin/env.sh`.
+### Docker客户端命令
+如需以`sudo` 运行`docker`命令，请修改`bin/env.sh`中的`docker_cmd`变量。
 
 ```bash
 docker_cmd="sudo docker"
 ```
 
-### The bridge name which is used by Docker daemon
-If your Docker daemon uses a bridge different from `docker0`, change `bridge_name` in `bin/env.sh`.
+### Docker守护进程使用的网桥名称
+如果您的Docker守护进程使用的网桥名不是`docker0`，请修改`bin/env.sh`中的`bridge_name`变量。
 
 ```bash
 bridge_name=bridge0
 ```
 
-## Build images
-You have to agree the licenses before building the images and use them.
+## 构建映像
+在构建并使用映像前，您必须同意其许可证。
 
 ```bash
 cd bin
@@ -39,25 +39,25 @@ cd bin
 ./buildimages.sh
 ```
 
-An SSH key pair is created in this process. That is `bin/id_rsa` and `bin/id_rsa.pub`. The private key is used for login to the instances via SSH. If you want to use another key pair, place it in `bin` directory as `id_rsa` and `id_rsa.pub`.
+在此过程中将生成一组SSH公私钥对，对应的文件是 `bin/id_rsa` 和 `bin/id_rsa.pub`。 私钥可用于通过SSH登录容器实例。如果您希望使用别的公私钥对，请将其复制到`bin` directory目录，并同样命名为`id_rsa`和`id_rsa.pub`。
 
-## Start the minimum set of containers
-`startminimum.sh` starts the minimum set of containers. The script starts SkyDNS, SkyDock, one Cassandra (cassandra1), the data loader, Eureka server (service registry), Zuul (load balancer), Microscaler and Microscaler Agent. Two auto scaling groups (ASGs) are created. One is for the authentication service, another is for the web application. Each ASG has one instance as the desired capacity. The one auth-service and one webapp are started by Microscaler. Please wait few minutes after the command finishes.
+## 可启动的容器最小集
+`startminimum.sh`命令用于启动一组最小集的容器。该命令将启动SkyDNS、SkyDock、1个Cassandra (cassandra1)、数据加载器(data loader)、Eureka服务器(服务注册中心)、 Zuul(负载均衡器)、Microscaler以及Microscaler代理程序。 将有2个自动扩缩组(ASG)被创建：其一组为认证服务，另一组为Web应用。每个ASG设置为初始容量有1个实例。Microscaler负责启动其中的认证服务和Web应用实例。请留几分钟等候命令结束。
 
 ```bash
 cd bin
 ./startminimum.sh
 ```
 
-## Switch the application servers
-The default application server for auth-service and webbapp is IBM WebSphere Application Server Liberty profile (WLP). You can use Tomcat instead of WLP. Change `appserver` value in `bin/env.sh`.
+## 切换应用服务器
+认证服务和Web应用的默认应用服务器是IBM WebSphere Application Server Liberty profile (WLP)。您也可以选择使用Tomcat。选项是`bin/env.sh`中的`appserver`变量。
 
 ```bash
 # "wlp" for WAS Liberty profile or "tc" for Tomcat
 appserver=tc
 ```
 
-Delete and create the ASGs (and the loader configurations) to run auth-service and webapp on Tomcat.
+删除和创建自动扩缩组(ASG) 及其加载配置，以运行Tomcat上的认证服务和Web应用。
 
 ```bash
 cd bin
@@ -66,8 +66,8 @@ cd bin
 ./startasg.sh
 ```
 
-## Add additional containers
-Auth-service and webapp are managed by Microscaler. If you want more those instances, change ASG configuration.
+## 增加更多的容器
+认证服务和Web应用由Microscaler管理。如果您需要更多实例，请修改自动扩缩组(ASG)的配置。
 
 ### Cassandra
 
@@ -75,45 +75,45 @@ Auth-service and webapp are managed by Microscaler. If you want more those insta
 ./addcassandra.sh
 ```
 
-## Stop all containers and clean the environment
+## 停止所有容器并清理环境
 
 ```bash
 ./stopall.sh
 ```
 
-## Show IP Addresses of the containers
+## 显示容器的IP地址
 
 ```bash
 ./showipaddrs.sh
 ```
 
-## Login to the container
-Use SSH. SSH servers run on all containers except SkyDNS and SkyDock.
+## 登录容器
+使用SSH登录容器。除了SkyDNS和SkyDock之外，几乎所有容器都运行有SSH服务。
 
 ```bash
 ssh -i bin/id_rsa root@172.17.0.5
 ```
 
-## Quick test
-### Zuul and webapp
+## 快速测试
+### Zuul 和Web应用
 
 ```bash
 ./testwebapp.sh
 ```
 
-or
+或
 
 ```bash
 ./testwebapp.sh 172.17.0.6
 ```
 
-### auth-service
+### 认证服务
 
 ```bash
 ./testauth.sh
 ```
 
-or
+或
 
 ```bash
 ./testauth.sh 172.17.0.9
@@ -127,7 +127,7 @@ or
 ./showcustomertable.sh
 ```
 
-## Check name resolution
+## 检查域名解析
 
 ```bash
 dig @172.17.42.1 +short zuul.*.local.flyacmeair.net
@@ -137,8 +137,8 @@ dig @172.17.42.1 +short webapp1.*.local.flyacmeair.net
 dig @172.17.42.1 +short auth1.*.local.flyacmeair.net
 ```
 
-## Problem?
-Make sure your docker version. The version might be different from the assumption of these instructions.
+## 问题？
+请确认您的docker版本与下表一致。有些问题可能是因为您的版本不符而导致的。
 
 ```bash
 $ docker version
@@ -152,29 +152,29 @@ Go version (server): go1.2.1
 Git commit (server): 63fe64c
 ```
 
-TCP socket might not be enabled. Check options of Docker daemon.
+可能没有开启TCP套接字。检查Docker守护进程的配置选项。
 
 ```bash
 $ ps -ef | grep docker
 root     22320     1  0 14:06 ?        00:01:00 /usr/bin/docker -d -H tcp://0.0.0.0:2735 -H unix://var/run/docker.sock
 ```
 
-Your firewall might block the communications between the containers and the Docker daemon. Please check your firewall rules.
+您的防火墙可能阻塞了容器与Docker守护进程之间的通信。请检查您的防火墙规则。
 
-SkyDock might not work properly. Please try restart `skydock`. SkyDock registers all running containers at its start time. You don't have to restart other containers.
+SkyDock可能没有正确工作。请尝试重启`skydock`。SkyDock在启动时会登记所有正在运行中的容器。您无需重启其它容器。
 
 ```bash
 docker restart skydock
 ```
 
-The Docker images might different as you assume. Try following commands to clear images. NOTICE: the following commands stop all containers and remove all containers and images.
+Docker映像可能与您假定的不同。请用以下命令清理本地映像。注意：该命令会停止全部容器并删除所有的容器和映像。
 
 ```bash
 docker rm -f `docker ps -qa`
 docker rmi `docker images -q`
 ```
 
-## Software versions
+## 软件版本
 |Image|Name|Version|Format|Source|
 |-----|----|------|------|-------|
 |asgard|Asgard|latest (dockerlocal branch)|binary|https://acmeair.ci.cloudbees.com/job/asgard-etiport/|
