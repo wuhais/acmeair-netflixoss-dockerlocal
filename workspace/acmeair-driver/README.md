@@ -5,6 +5,7 @@ These instructions will assist with setting up the workload for the Acme Air sam
 * Click on "Download Releases" and download the binary release.
 * Uncompress the file to a directory of your choice. 
 * For the rest of these instructions we will assume this to be the JMETER_DIR 
+
 ```text
 tar -xzf apache-jmeter-2.9.tgz
 ```
