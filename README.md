@@ -53,6 +53,7 @@ cd bin
 `startallexceptscaler.sh` starts one container per each service. The script starts one SkyDNS, one SkyDock, one Cassandra (cassandra1), one data loader, one Eureka server, one Zuul, one web application instance, one authentication service instance.
 
 ```bash
+cd bin
 ./startallexceptscaler.sh
 ```
 
