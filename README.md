@@ -138,6 +138,7 @@ or
 ## Check name resolution
 
 ```bash
+./testdns.sh
 dig @172.17.42.1 +short zuul.*.local.flyacmeair.net
 dig @172.17.42.1 +short eureka.*.local.flyacmeair.net
 dig @172.17.42.1 +short cassandra1.*.local.flyacmeair.net
