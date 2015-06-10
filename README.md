@@ -30,7 +30,7 @@ docker_cmd="sudo docker"
 If your Docker daemon uses a bridge different from `docker0`, change `bridge_name` in `bin/env.sh`.
 
 ```bash
-bridge_name=bridge0
+bridge_name=docker0
 ```
 
 ## Build images

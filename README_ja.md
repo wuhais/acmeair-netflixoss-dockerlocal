@@ -27,7 +27,7 @@ docker_cmd="sudo docker"
 Dockerデーモンが`docker0`とは異なるブリッジを使う場合は`bin/env.sh`の`bridge_name`の値を変更します。
 
 ```bash
-bridge_name=bridge0
+bridge_name=docker0
 ```
 
 ## イメージのビルド
