@@ -1,6 +1,9 @@
 Acmeair-netflix-docker
 ======================
-These instructions are based on Docker 1.0.0 run on Ubuntu trusty boot2docker. [(Japanese)](README_ja.md)
+These instructions are based on Docker 1.0.0 run on Ubuntu trusty boot2docker. [(Japanese)](README_ja.md) [(Chinese)](README_zh.md)
+## The source code
+
+This is the source code fetched from https://github.com/aspyker/acmeair-netflixoss-dockerlocal
 
 ## The topology
 
@@ -27,7 +30,7 @@ docker_cmd="sudo docker"
 If your Docker daemon uses a bridge different from `docker0`, change `bridge_name` in `bin/env.sh`.
 
 ```bash
-bridge_name=bridge0
+bridge_name=docker0
 ```
 
 ## Build images
@@ -41,12 +44,20 @@ cd bin
 
 An SSH key pair is created in this process. That is `bin/id_rsa` and `bin/id_rsa.pub`. The private key is used for login to the instances via SSH. If you want to use another key pair, place it in `bin` directory as `id_rsa` and `id_rsa.pub`.
 
-## Start the minimum set of containers
+## Start the minimum set of containers (with Microscaler)
 `startminimum.sh` starts the minimum set of containers. The script starts SkyDNS, SkyDock, one Cassandra (cassandra1), the data loader, Eureka server (service registry), Zuul (load balancer), Microscaler and Microscaler Agent. Two auto scaling groups (ASGs) are created. One is for the authentication service, another is for the web application. Each ASG has one instance as the desired capacity. The one auth-service and one webapp are started by Microscaler. Please wait few minutes after the command finishes.
 
 ```bash
 cd bin
 ./startminimum.sh
+```
+
+## Start the minimum set of containers (without Microscaler)
+`startallexceptscaler.sh` starts one container per each service. The script starts one SkyDNS, one SkyDock, one Cassandra (cassandra1), one data loader, one Eureka server, one Zuul, one web application instance, one authentication service instance.
+
+```bash
+cd bin
+./startallexceptscaler.sh
 ```
 
 ## Switch the application servers
@@ -130,6 +141,7 @@ or
 ## Check name resolution
 
 ```bash
+./testdns.sh
 dig @172.17.42.1 +short zuul.*.local.flyacmeair.net
 dig @172.17.42.1 +short eureka.*.local.flyacmeair.net
 dig @172.17.42.1 +short cassandra1.*.local.flyacmeair.net

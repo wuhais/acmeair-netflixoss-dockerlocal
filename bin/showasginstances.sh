@@ -7,7 +7,7 @@ asgc_addr=$($docker_cmd inspect --format '{{ .NetworkSettings.IPAddress }}' micr
 ssh -i id_rsa root@$asgc_addr << EOF
 cd /usr/local/microscaler-cli/bin &&\
 ./ms login --target http://localhost:56785/asgcc/ --user user01 --key key &&\
-
+echo
 ./ms list-instances --asg-name acmeair_auth_service
 echo
 ./ms list-instances --asg-name acmeair_webapp

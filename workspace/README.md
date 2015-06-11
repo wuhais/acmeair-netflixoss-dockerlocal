@@ -2,6 +2,10 @@
 
 This application shows an implementation of a fictitious airline called "Acme Air".  The application was built with the some key business requirements: the ability to scale to billions of web API calls per day, the need to develop and deploy the application in public clouds (as opposed to dedicated pre-allocated infrastructure), and the need to support multiple channels for user interaction (with mobile enablement first and browser/Web 2.0 second).  In addition to the original Acme Air application, the application has been changed to leverage the Netflix OSS cloud platform.
 
+## The source code
+
+This is the source code fetched from https://github.com/aspyker/acmeair-netflix/tree/astyanax
+
 ## What has been changed in this application for Netflix OSS
 
 This application is based upon the original Acme Air Sample and Benchmark, but has been changed in the following ways to demostrate the Netflix OSS cloud platform:

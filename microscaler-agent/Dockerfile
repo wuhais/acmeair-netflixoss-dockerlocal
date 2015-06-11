@@ -24,6 +24,9 @@ RUN cd /usr/local &&\
   echo --- >> /.bundle/config &&\
   echo 'BUNDLE_BUILD__EVENTMACHINE: --with-cflags="-O2 -pipe -march=native -w" ' >> /.bundle/config &&\
   echo 'BUNDLE_BUILD__THIN: --with-cflags="-O2 -pipe -march=native -w" ' >> /.bundle/config &&\
+  echo "" >> Gemfile &&\
+  echo "gem 'eventmachine', '~> 1.0.0.beta.4.1'" >> Gemfile &&\
+  rm Gemfile.lock &&\
   bundle install &&\
   chmod a+x lib/docker_agent.rb &&\
   chmod a+x lib/rest_client.rb

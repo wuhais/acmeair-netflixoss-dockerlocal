@@ -15,12 +15,11 @@
 ################################################################################
 FROM acmeair/liberty
 
-RUN cd /opt/ibm/wlp/usr/servers/defaultServer &&\
-  mkdir -p apps/auth-service.war &&\
-  cd apps/auth-service.war &&\
-  wget -qO app.war https://acmeair.ci.cloudbees.com/job/acmeair-netflix-astyanax/lastSuccessfulBuild/artifact/acmeair-auth-service-tc7/build/libs/acmeair-auth-service-tc7-0.1.0-SNAPSHOT.war &&\
-  jar xf app.war &&\
-  rm app.war
+RUN mkdir -p /opt/ibm/wlp/usr/servers/defaultServer/apps/auth-service.war
+ADD acmeair-auth-service-tc7-0.1.0-SNAPSHOT.war /opt/ibm/wlp/usr/servers/defaultServer/apps/auth-service.war/
+RUN cd /opt/ibm/wlp/usr/servers/defaultServer/apps/auth-service.war/ &&\
+  jar xf acmeair-auth-service-tc7-0.1.0-SNAPSHOT.war &&\
+  rm *.war
 
 ADD ACMEAIR_AUTH_SERVICE-docker.properties /opt/ibm/wlp/usr/servers/defaultServer/apps/auth-service.war/WEB-INF/classes/ACMEAIR_AUTH_SERVICE-docker.properties
 ADD config.properties /opt/ibm/wlp/usr/servers/defaultServer/apps/auth-service.war/WEB-INF/classes/config.properties
@@ -31,4 +30,3 @@ ADD jvm.options /opt/ibm/wlp/usr/servers/defaultServer/jvm.options
 EXPOSE 80
 
 CMD ["/usr/bin/supervisord", "-n"]
-

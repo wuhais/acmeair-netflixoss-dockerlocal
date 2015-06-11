@@ -9,7 +9,7 @@ cd /usr/local/microscaler-cli/bin &&\
 ./ms login --target http://localhost:56785/asgcc/ --user user01 --key key &&\
 \
 ./ms add-lconf \
---lconf-name acmeair_auth_service \
+--lconf-name auth \
 --lconf-image-id acmeair/auth-service${as_suffix} \
 --lconf-instances-type m1.small \
 --lconf-key key1 &&\
@@ -21,9 +21,9 @@ cd /usr/local/microscaler-cli/bin &&\
 --lconf-key key1 &&\
 \
 ./ms add-asg \
---asg-name acmeair_auth_service \
+--asg-name auth \
 --asg-availability-zones docker-local-1a \
---asg-launch-configuration acmeair_auth_service \
+--asg-launch-configuration auth \
 --asg-min-size 1 \
 --asg-desired-capacity 1 \
 --asg-max-size 4 \

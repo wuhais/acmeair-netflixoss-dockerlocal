@@ -26,7 +26,6 @@ RUN mkdir /tmp/go &&\
   rm -Rf /tmp/go
 
 # MongoDB
-RUN gem install mongo bson_ext
 RUN sed -i 's/\(bind_ip = \).*/\10.0.0.0/' /etc/mongodb.conf &&\
   echo "port = 27017" >> /etc/mongodb.conf &&\
   echo "smallfiles = true" >> /etc/mongodb.conf
@@ -50,6 +49,9 @@ RUN cd /usr/local &&\
   echo --- >> /.bundle/config &&\
   echo 'BUNDLE_BUILD__EVENTMACHINE: --with-cflags="-O2 -pipe -march=native -w" ' >> /.bundle/config &&\
   echo 'BUNDLE_BUILD__THIN: --with-cflags="-O2 -pipe -march=native -w" ' >> /.bundle/config &&\
+  sed -i 's/eventmachine (0.12.10)/eventmachine (1.0.0)/' Gemfile.lock &&\
+  sed -i 's/nats (0.4.28)/nats (0.4.26)/g' Gemfile.lock &&\
+  sed -i 's/eventmachine (= 0.12.10)/eventmachine (>= 0.12.10)/g' Gemfile.lock &&\
   bundle install &&\
   cd ../microscaler-cli &&\
   bundle install 

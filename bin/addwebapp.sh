@@ -9,6 +9,6 @@ $docker_cmd run \
 -d -t -P \
 --dns "$dns" \
 $dns_search \
---name webapp$num -h webapp$num.webappi${as_suffix}.local.flyacmeair.net \
+--name webapp$num -h webapp$num.webapp${as_suffix}.local.flyacmeair.net \
 acmeair/webapp${as_suffix}
 

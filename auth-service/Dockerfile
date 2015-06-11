@@ -15,12 +15,11 @@
 ################################################################################
 FROM acmeair/tomcat
 
-RUN cd /opt/tomcat/webapps &&\
-  mkdir ROOT &&\
-  cd ROOT &&\
-  wget -qO app.war https://acmeair.ci.cloudbees.com/job/acmeair-netflix-astyanax/lastSuccessfulBuild/artifact/acmeair-auth-service-tc7/build/libs/acmeair-auth-service-tc7-0.1.0-SNAPSHOT.war &&\
-  jar xf app.war &&\
-  rm app.war
+RUN mkdir /opt/tomcat/webapps/ROOT
+ADD acmeair-auth-service-tc7-0.1.0-SNAPSHOT.war /opt/tomcat/webapps/ROOT/
+RUN cd /opt/tomcat/webapps/ROOT/ &&\
+ jar xf acmeair-auth-service-tc7-0.1.0-SNAPSHOT.war &&\
+ rm *.war
 
 ADD ACMEAIR_AUTH_SERVICE-docker.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/ACMEAIR_AUTH_SERVICE-docker.properties
 ADD config.properties /opt/tomcat/webapps/ROOT/WEB-INF/classes/config.properties
