@@ -27,7 +27,7 @@ docker_cmd="sudo docker"
 如果您的Docker守护进程使用的网桥名不是`docker0`，请修改`bin/env.sh`中的`bridge_name`变量。
 
 ```bash
-bridge_name=bridge0
+bridge_name=docker0
 ```
 
 ## 构建映像
@@ -39,7 +39,7 @@ cd bin
 ./buildimages.sh
 ```
 
-在此过程中将生成一组SSH公私钥对，对应的文件是 `bin/id_rsa` 和 `bin/id_rsa.pub`。 私钥可用于通过SSH登录容器实例。如果您希望使用别的公私钥对，请将其复制到`bin` directory目录，并同样命名为`id_rsa`和`id_rsa.pub`。
+在此过程中将生成一组SSH公私钥对，对应的文件是 `bin/id_rsa` 和 `bin/id_rsa.pub`。 私钥可用于通过SSH登录容器实例。如果您希望使用别的公私钥对，请将其复制到`bin`目录，并同样命名为`id_rsa`和`id_rsa.pub`。
 
 ## 可启动的容器最小集
 `startminimum.sh`命令用于启动一组最小集的容器。该命令将启动SkyDNS、SkyDock、1个Cassandra (cassandra1)、数据加载器(data loader)、Eureka服务器(服务注册中心)、 Zuul(负载均衡器)、Microscaler以及Microscaler代理程序。 将有2个自动扩缩组(ASG)被创建：其一组为认证服务，另一组为Web应用。每个ASG设置为初始容量有1个实例。Microscaler负责启动其中的认证服务和Web应用实例。请留几分钟等候命令结束。
