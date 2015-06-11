@@ -148,7 +148,15 @@ or
 ## Check name resolution
 
 ```bash
-./testdns.sh
+root@acmeair-services:~/acmeair-netflix/bin# ./testdns.sh
+172.17.0.124
+172.17.0.123
+172.17.0.119
+
+```
+if there are less than 3 returning IPs, it means the skydns is not properly working. Try to retart the docker containers for both skydns and skydock. After finished, rerun the same test. 
+
+```bash
 dig @172.17.42.1 +short zuul.*.local.flyacmeair.net
 dig @172.17.42.1 +short eureka.*.local.flyacmeair.net
 dig @172.17.42.1 +short cassandra1.*.local.flyacmeair.net
