@@ -1,0 +1,19 @@
+#!/bin/sh
+docker pull 9.12.234.186:5000/acmeair/microscaler         
+docker pull 9.12.234.186:5000/acmeair/microscaler-agent   
+docker pull 9.12.234.186:5000/acmeair/webapp-liberty      
+docker pull 9.12.234.186:5000/acmeair/auth-service-liberty
+docker pull 9.12.234.186:5000/acmeair/asgard              
+docker pull 9.12.234.186:5000/acmeair/webapp              
+docker pull 9.12.234.186:5000/acmeair/auth-service        
+docker pull 9.12.234.186:5000/acmeair/eureka              
+docker pull 9.12.234.186:5000/acmeair/zuul                
+docker pull 9.12.234.186:5000/acmeair/tomcat              
+docker pull 9.12.234.186:5000/acmeair/loader              
+docker pull 9.12.234.186:5000/acmeair/cassandra           
+docker pull 9.12.234.186:5000/acmeair/base                
+docker pull 9.12.234.186:5000/acmeair/liberty             
+docker pull 9.12.234.186:5000/acmeair/ibmjava             
+docker pull 9.12.234.186:5000/acmeair/pwgen               
+docker pull 9.12.234.186:5000/ubuntu                      
+docker pull 9.12.234.186:5000/crosbymichael/skydock   
