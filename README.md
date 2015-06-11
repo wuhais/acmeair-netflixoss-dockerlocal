@@ -164,6 +164,9 @@ dig @172.17.42.1 +short webapp1.*.local.flyacmeair.net
 dig @172.17.42.1 +short auth1.*.local.flyacmeair.net
 ```
 
+## Jmeter
+Follow the instructions [here](https://github.rtp.raleigh.ibm.com/cleancloudsight/acmeair-netflix/tree/master/workspace/acmeair-driver) to setup your workload generator.
+
 ## Problem?
 Make sure your docker version. The version might be different from the assumption of these instructions.
 
