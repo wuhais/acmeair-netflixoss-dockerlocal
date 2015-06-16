@@ -65,7 +65,7 @@ Populate the database with the following command
 cd bin
 ./runloader.sh
 ```
-By default, the loader will populate ```30000``` customers. If you want to change this number, you can change the code from [here(https://github.rtp.raleigh.ibm.com/cleancloudsight/acmeair-netflix/blob/master/workspace/acmeair-loader/src/main/resources/loader.properties) and recompile the whole loader project.
+By default, the loader will populate ```30000``` customers. If you want to change this number, you can change the code from [here](https://github.rtp.raleigh.ibm.com/cleancloudsight/acmeair-netflix/blob/master/workspace/acmeair-loader/src/main/resources/loader.properties) and recompile the whole loader project.
 Sometimes, we may end up with having trouble in accessing the cassandra database due to dns error. The solution will be to restart both the ```skydns``` container and ```skydock``` container. Then try the same ```runloader.sh``` command again. 
 
 ## Start the minimum set of containers (without Microscaler)
