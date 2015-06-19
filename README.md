@@ -34,11 +34,36 @@ bridge_name=docker0
 ```
 
 ## Build images
-You have to agree the licenses before building the images and use them.
+You have to go through the following steps to build the images
+
+### Agree the licenses before building the images and use them.
 
 ```bash
 cd bin
 ./acceptlicenses.sh
+```
+
+### Build the source code
+Before doing this, make sure you have [gradle](https://gradle.org/) already being installed.
+
+```bash
+cd workspace
+./gradlew
+./gradlew distZip
+```
+To list other gradle tasks, try the following:
+```bash
+cd workspace
+./gradlew tasks
+```
+To work with eclipse:
+```bash
+cd workspace
+./gradlew eclipse
+```
+
+### Build the docker images
+```bash
 ./buildimages.sh
 ```
 
