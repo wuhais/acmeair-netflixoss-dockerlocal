@@ -29,6 +29,7 @@ RUN echo 'export PATH=/opt/cassandra/bin:$PATH' > /etc/profile.d/cassandra.sh
 ENV MAX_HEAP_SIZE 48m
 ENV HEAP_NEWSIZE 12m
 
+ADD change.sh /root/change.sh
 ADD cassandra.conf /etc/supervisor/conf.d/cassandra.conf
-CMD ["/usr/bin/supervisord", "-n"]
+CMD ["sh", "/root/change.sh"]
 

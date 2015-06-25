@@ -28,8 +28,6 @@ RUN sed -i 's/DROP/\/\/DROP/' /opt/acmeair-loader/bin/acmeair-cql.txt
 
 ENV JAVA_OPTS -Dcom.acmeair.cassandra.contactpoint=cassandra1.cassandra.local.flyacmeair.net
 
-CMD /opt/cassandra/bin/cqlsh \
-    -f /opt/acmeair-loader/bin/acmeair-cql.txt \
-    cassandra1.cassandra.local.flyacmeair.net &&\
-  cd /opt/acmeair-loader/bin &&\
-  ./acmeair-loader
+Add loadData.sh /loadData.sh
+
+CMD ["sh", "/loadData.sh"]
