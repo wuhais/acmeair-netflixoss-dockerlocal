@@ -25,5 +25,3 @@ iprange=10.2.3.0/24
 dnsrange=10.2.254.1/24
 host_name=eth0
 iplist="9.186.52.217 9.186.52.183 9.186.52.166"
-host_addr=$(ifconfig $host_name | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
-newiplist=$iplist |awk 'gsub(/'$host_addr'/,"",$0)'
