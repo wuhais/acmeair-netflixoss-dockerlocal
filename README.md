@@ -70,6 +70,7 @@ cd workspace
 
 ### Build the docker images
 ```bash
+cd bin
 ./buildimages.sh
 ```
 
