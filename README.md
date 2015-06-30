@@ -46,6 +46,12 @@ cd bin
 ### Build the source code
 Before doing this, make sure you have [gradle](https://gradle.org/) already being installed.
 
+Install jdk by 
+```bash
+apt-get install openjdk-7-jdk
+```
+Update ```workspace/gradle.properties``` and point the ```org.gradle.java.home``` to your local JAVA_HOME
+
 ```bash
 cd workspace
 ./gradlew
