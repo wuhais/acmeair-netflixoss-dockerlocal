@@ -83,14 +83,15 @@ cd bin
 ./pullimages.sh
 ```
 
-## Start the minimum set of containers (with Microscaler)
+## Run acmeair on one docker host (without weave) 
+### Start the minimum set of containers (with Microscaler)
 `startminimum.sh` starts the minimum set of containers. The script starts SkyDNS, SkyDock, one Cassandra (cassandra1), the data loader, Eureka server (service registry), Zuul (load balancer), Microscaler and Microscaler Agent. Two auto scaling groups (ASGs) are created. One is for the authentication service, another is for the web application. Each ASG has one instance as the desired capacity. The one auth-service and one webapp are started by Microscaler. Please wait few minutes after the command finishes.
 
 ```bash
 cd bin
 ./startminimum.sh
 ```
-## Populate the cassandra database
+### Populate the cassandra database
 Populate the database with the following command
 
 ```bash
@@ -100,12 +101,41 @@ cd bin
 By default, the loader will populate ```30000``` customers. If you want to change this number, you can change the code from [here](https://github.rtp.raleigh.ibm.com/cleancloudsight/acmeair-netflix/blob/master/workspace/acmeair-loader/src/main/resources/loader.properties) and recompile the whole loader project.
 Sometimes, we may end up with having trouble in accessing the cassandra database due to dns error. The solution will be to restart both the ```skydns``` container and ```skydock``` container. Then try the same ```runloader.sh``` command again. 
 
-## Start the minimum set of containers (without Microscaler)
+### Start the minimum set of containers (without Microscaler)
 `startallexceptscaler.sh` starts one container per each service. The script starts one SkyDNS, one SkyDock, one Cassandra (cassandra1), one data loader, one Eureka server, one Zuul, one web application instance, one authentication service instance.
 
 ```bash
 cd bin
 ./startallexceptscaler.sh
+```
+## Run acmeair on multiple docker hosts (with weave)
+We can also leverage [weave](https://github.com/weaveworks/weave) to setup the network overlay for docker containers. Before doing this, you need to install weave on every docker hosts by 
+```bach
+sudo curl -L git.io/weave -o /usr/local/bin/weave
+sudo chmod a+x /usr/local/bin/weave
+weave
+weave setup
+```
+Check the setup of weave by
+```bash
+root@acmeair-services3:~/acmeair-netflix# weave version
+weave script 1.0.1
+weave router 1.0.1
+weave DNS 1.0.1
+weave exec 1.0.1
+```
+
+### Start the minimum set of containers (without Microscaler)
+Update the ```env.sh``` on every docker host
+```bash
+cd weave-bin
+vi env.sh
+```
+Revise the following config
+```
+iprange=11.128.0.1/24  #Your prefer iprange
+dnsrange=11.128.254.1/24 #Update the dns according to your iprange
+iplist="10.112.80.111 10.112.80.48 10.112.80.10" #Your docker host ip lists
 ```
 
 ## Switch the application servers
