@@ -108,7 +108,14 @@ Sometimes, we may end up with having trouble in accessing the cassandra database
 cd bin
 ./startallexceptscaler.sh
 ```
-## Run acmeair on multiple docker hosts (with weave)
+
+### Stop all the running containers
+```bash
+cd bin
+./stopall.sh
+```
+
+## Run acmeair on multiple docker hosts (with weave version 1.0.0 +)
 We can also leverage [weave](https://github.com/weaveworks/weave) to setup the network overlay for docker containers. Before doing this, you need to install weave on every docker hosts by 
 ```bach
 sudo curl -L git.io/weave -o /usr/local/bin/weave
@@ -132,10 +139,43 @@ cd weave-bin
 vi env.sh
 ```
 Revise the following config
-```
+```base
 iprange=11.128.0.1/24  #Your prefer iprange
-dnsrange=11.128.254.1/24 #Update the dns according to your iprange
-iplist="10.112.80.111 10.112.80.48 10.112.80.10" #Your docker host ip lists
+dnsrange=11.128.254.1/24 #Update the dns according to your iprange. Each docker host needs its own range, such as 11.128.254.3/2, 11.128.254.5/24 etc.
+iplist="acmeair-services acmeair-services2 acmeair-services3" #Your docker hostname. Remember NOT to include the docker host's own name
+```
+Enable weave on each docker host by
+```bash
+cd weave-bin
+./startweave.sh
+```
+Run each service on the docker hosts seperately, for example
+On ```acmeair-services``` 
+```bash
+cd weave-bin
+./startzuul.sh
+./starteureka.sh
+```
+On ```acmeair-services2```
+```bash
+cd weave-bin
+./addwebapp.sh
+```
+On ```acmeair-services3```
+```bash
+cd weave-bin
+./addauthsvc.sh
+```
+On ```acmeair-services4```
+```bash
+cd weave-bin
+./addcassandra.sh
+./runloader.sh
+```
+### Stop all the running containers
+```bash
+cd weave-bin
+./stopall.sh
 ```
 
 ## Switch the application servers
