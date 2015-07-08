@@ -35,3 +35,5 @@ docker pull 9.12.234.186:5000/ubuntu
 docker tag 9.12.234.186:5000/ubuntu ubuntu                   
 docker pull 9.12.234.186:5000/crosbymichael/skydock
 docker tag 9.12.234.186:5000/crosbymichael/skydock crosbymichael/skydock   
+docker pull 9.12.234.186:5000/crosbymichael/skydns
+docker tag 9.12.234.186:5000/crosbymichael/skydns crosbymichael/skydns
