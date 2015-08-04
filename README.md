@@ -3,7 +3,7 @@ Acmeair-netflix-docker
 These instructions are based on Docker 1.0.0 run on Ubuntu trusty boot2docker. [(Japanese)](README_ja.md) [(Chinese)](README_zh.md)
 ## The source code
 
-This is the source code fetched from https://github.com/aspyker/acmeair-netflixoss-dockerlocal
+The original project is forked from [here](https://github.com/aspyker/acmeair-netflixoss-dockerlocal). Base on the original version, we setup weave as the docker network overlay. 
 
 ## The topology
 
@@ -98,7 +98,7 @@ Populate the database with the following command
 cd bin
 ./runloader.sh
 ```
-By default, the loader will populate ```30000``` customers. If you want to change this number, you can change the code from [here](https://github.rtp.raleigh.ibm.com/cleancloudsight/acmeair-netflix/blob/master/workspace/acmeair-loader/src/main/resources/loader.properties) and recompile the whole loader project.
+By default, the loader will populate ```30000``` customers. If you want to change this number, you can change the code from [here](https://github.com/wuhais/acmeair-netflixoss-weave/blob/weave/workspace/acmeair-loader/src/main/resources/loader.properties) and recompile the whole loader project.
 Sometimes, we may end up with having trouble in accessing the cassandra database due to dns error. The solution will be to restart both the ```skydns``` container and ```skydock``` container. Then try the same ```runloader.sh``` command again. 
 
 ### Start the minimum set of containers (without Microscaler)
@@ -276,7 +276,7 @@ dig @172.17.42.1 +short auth1.*.local.flyacmeair.net
 ```
 
 ## Jmeter
-Follow the instructions [here](https://github.rtp.raleigh.ibm.com/cleancloudsight/acmeair-netflix/tree/master/workspace/acmeair-driver) to setup your workload generator.
+Follow the instructions [here](https://github.com/wuhais/acmeair-netflixoss-weave/tree/weave/workspace/acmeair-driver) to setup your workload generator.
 
 ## Problem?
 Make sure your docker version. The version might be different from the assumption of these instructions.

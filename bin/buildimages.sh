@@ -33,41 +33,43 @@ if [ ! -f "id_rsa" ]; then
   chmod 600 id_rsa
 fi
 
+echo "**************** Copy the key ..."
 cp id_rsa.pub ../base
 
+echo "**************** Copy the built files ..." 
 cd ..
 cd bin
 ./addjarwar.sh
 cd ..
-echo "Building acmeair/pwgen"
+echo "**************** Building acmeair/pwgen"
 $docker_cmd build -t acmeair/pwgen pwgen
-echo "Building acmeair/base"
+echo "**************** Building acmeair/base"
 $docker_cmd build -t acmeair/base base
-echo "Building acmeair/cassandra"
+echo "**************** Building acmeair/cassandra"
 $docker_cmd build -t acmeair/cassandra cassandra
-echo "Building acmeair/loader"
+echo "**************** Building acmeair/loader"
 $docker_cmd build -t acmeair/loader loader
-echo "Building acmeair/tomcat"
+echo "**************** Building acmeair/tomcat"
 cd tomcat
 ./buildtomcat.sh
 cd ..
-echo "Building acmeair/zuul"
+echo "**************** Building acmeair/zuul"
 $docker_cmd build -t acmeair/zuul zuul
-echo "Building acmeair/eureka"
+echo "**************** Building acmeair/eureka"
 $docker_cmd build -t acmeair/eureka eureka
-echo "Building acmeair/auth-service"
+echo "**************** Building acmeair/auth-service"
 $docker_cmd build -t acmeair/auth-service auth-service
-echo "Building acmeair/webapp"
+echo "**************** Building acmeair/webapp"
 $docker_cmd build -t acmeair/webapp webapp
-echo "Building acmeair/microscaler"
+echo "**************** Building acmeair/microscaler"
 cd microscaler
 ./buildmicroscaler.sh
 cd ..
-echo "Building acmeair/microscaler-agent"
+echo "**************** Building acmeair/microscaler-agent"
 $docker_cmd build -t acmeair/microscaler-agent microscaler-agent
-echo "Building acmeair/asgard"
+echo "**************** Building acmeair/asgard"
 $docker_cmd build -t acmeair/asgard asgard
-#echo "Building acmeair/ibmjava"
+#echo "**************** Building acmeair/ibmjava"
 #$docker_cmd build -t acmeair/ibmjava ibmjava
 #echo "Building acmeair/liberty"
 #$docker_cmd build -t acmeair/liberty liberty
