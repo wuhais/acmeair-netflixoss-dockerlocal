@@ -21,7 +21,7 @@ pwgen_cmd="$docker_cmd run --rm acmeair/pwgen"
 dns=$dns_addr
 dns_search="--dns-search `echo $dns_search_list | sed "s/ / --dns-search /g"`"
 
-iprange=10.2.3.0/24
-dnsrange=10.2.254.1/24
+iprange=11.2.3.0/24
+dnsrange=11.2.254.1/24
 host_name=eth0
-iplist="9.186.52.217 9.186.52.183 9.186.52.166"
+iplist=""

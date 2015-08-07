@@ -151,19 +151,13 @@ public class FlightsPostProcessor extends AbstractTestElement implements PostPro
 		} catch (ParseException e) {
 			System.out.println("responseDataAsString = " + responseDataAsString);
 			e.printStackTrace();
-			context.setIsFlightAvailable("false");
-			FlightsThreadLocal.set(context);
 		}
 		catch (NullPointerException e) {
 			e.printStackTrace();
 			System.out.println("NullPointerException in FlightsPostProcessor - ResponseData =" + responseDataAsString);
-			context.setIsFlightAvailable("false");
-			FlightsThreadLocal.set(context);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			context.setIsFlightAvailable("false");
-			FlightsThreadLocal.set(context);
 		}
 		return null;
 	}

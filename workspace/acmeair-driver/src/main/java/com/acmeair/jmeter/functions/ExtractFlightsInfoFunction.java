@@ -57,54 +57,47 @@ public class ExtractFlightsInfoFunction extends AbstractFunction {
 	@Override
 	synchronized public String execute(SampleResult arg0, Sampler arg1)
 			throws InvalidVariableException {
-		
-		try {
-			String value = parameters.get(0).execute();
+		String value = parameters.get(0).execute();
+
 	
-		
-			if (value.equalsIgnoreCase("UNSET")) {
-				JMeterContextService.getContext().getVariables().remove(FLIGHT_TO_COUNT);
-				JMeterContextService.getContext().getVariables().remove(FLIGHT_RET_COUNT);	
-				FlightsThreadLocal.unset();
-				return null;
-			}
-	
-			context = FlightsThreadLocal.get();
-			if (context == null) {
-				System.out.println(this.getClass().getName() + " FlightsContext is null. This should not be null. FlightsContext should be created by FlightsPostProcessor.");
-			}
-	
-			if (value.equalsIgnoreCase("isFlightAvailable")) {
-				return context.getIsFlightAvailable();
-			}
-			if (value.equalsIgnoreCase("numOfToFlights")) {
-				return context.getNumOfToFlights();
-			}
-			if (value.equalsIgnoreCase("numOfRetFlights")) {
-				return context.getNumOfRetFlights();
-			}
-			if (value.equalsIgnoreCase("TOFLIGHT")) {
-				return context.getTOFLIGHT();
-			}
-			if (value.equalsIgnoreCase("TOSEGMENTID")) {
-				return context.getTOSEGMENTID();
-			}
-			if (value.equalsIgnoreCase("RETFLIGHT")) {
-				return context.getRETFLIGHT();
-			}
-			if (value.equalsIgnoreCase("RESEGMENTID")) {
-				return context.getRESEGMENTID();
-			}
-			if (value.equalsIgnoreCase("ONEWAY")) {
-				return context.getONEWAY();
-			}
-	
+		if (value.equalsIgnoreCase("UNSET")) {
+			JMeterContextService.getContext().getVariables().remove(FLIGHT_TO_COUNT);
+			JMeterContextService.getContext().getVariables().remove(FLIGHT_RET_COUNT);	
+			FlightsThreadLocal.unset();
 			return null;
 		}
-		catch (Exception e) {
-			e.printStackTrace();
-			return null;
+
+		context = FlightsThreadLocal.get();
+		if (context == null) {
+			System.out.println(this.getClass().getName() + " FlightsContext is null. This should not be null. FlightsContext should be created by FlightsPostProcessor.");
 		}
+
+		if (value.equalsIgnoreCase("isFlightAvailable")) {
+			return context.getIsFlightAvailable();
+		}
+		if (value.equalsIgnoreCase("numOfToFlights")) {
+			return context.getNumOfToFlights();
+		}
+		if (value.equalsIgnoreCase("numOfRetFlights")) {
+			return context.getNumOfRetFlights();
+		}
+		if (value.equalsIgnoreCase("TOFLIGHT")) {
+			return context.getTOFLIGHT();
+		}
+		if (value.equalsIgnoreCase("TOSEGMENTID")) {
+			return context.getTOSEGMENTID();
+		}
+		if (value.equalsIgnoreCase("RETFLIGHT")) {
+			return context.getRETFLIGHT();
+		}
+		if (value.equalsIgnoreCase("RESEGMENTID")) {
+			return context.getRESEGMENTID();
+		}
+		if (value.equalsIgnoreCase("ONEWAY")) {
+			return context.getONEWAY();
+		}
+
+		return null;
 	}
 
 	@Override

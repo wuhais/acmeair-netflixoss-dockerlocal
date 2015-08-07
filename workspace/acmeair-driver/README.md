@@ -1,4 +1,4 @@
-These instructions will assist with setting up the workload for the Acme Air sample application using JMeter. 
+These instructions will assist with setting up the workload for the Acme Air sample application using JMeter. The original instructions can be found from [here](https://github.com/acmeair/acmeair/wiki/jMeter-Workload-Instructions)
 ## Download Apache JMeter 
 
 * Download Link:  [http://jmeter.apache.org](http://jmeter.apache.org)
@@ -12,17 +12,16 @@ tar -xzf apache-jmeter-2.9.tgz
  
 
 ##  Package the Acme Air Driver Code
-If you have not already done so, get the Acme Air codebase by following the [[WebSphere Liberty To WebSphere eXtreme Scale Instructions|WebSphere Liberty To WebSphere eXtreme Scale Setup]].
 Go in to the acmeair-driver directory and use maven to compile and package the jar file. 
 
 ```text
-cd %ACMEAIR_SRCDIR%/acmeair-driver 
-mvn package
+cd %ACMEAIR_SRCDIR%/workspace/acmeair-driver 
+mvn clean package
 ```
 
 copy the jar to  jmeter's ext directory
 ```text
-cp %ACMEAIR_SRCDIR%/acmeair-driver/target/acmeair-driver-1.0-SNAPSHOT.jar   %JMETER_DIR%/lib/ext/
+cp %ACMEAIR_SRCDIR%/workspace/acmeair-driver/target/acmeair-driver-1.0-SNAPSHOT.jar   %JMETER_DIR%/lib/ext/
 ```
 
 Also needed is the json-simple library to jmeter's ext directory.  
